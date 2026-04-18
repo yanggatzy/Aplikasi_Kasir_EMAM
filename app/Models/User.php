@@ -16,7 +16,9 @@ class User extends Authenticatable
 
 
     // Method sesuai use case
-    public function login() {}
+    public function login() {
+        
+    }
     public function logout() {}
     public function tambahUser() {}
     public function editUser() {}
