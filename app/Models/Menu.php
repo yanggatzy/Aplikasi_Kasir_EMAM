@@ -7,10 +7,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Menu extends Model
 {
-    protected $fillable = ['category_id', 'name', 'price', 'image', 'is_available'];
+    protected $fillable = [
+        'id_kategori',
+        'nama_menu',
+        'harga',
+        'gambar',
+        'status'];
 
-    public function category(): BelongsTo
+
+        public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Kategori::class, 'id_kategori');
     }
+
+    public function tambahMenu() {}
+    public function editMenu() {}
+    public function hapusMenu() {}
+    public function ubahStatusMenu() {}
 }
