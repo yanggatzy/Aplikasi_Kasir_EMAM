@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mejas', function (Blueprint $table) {
+       Schema::create('mejas', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_meja');
+            $table->integer('kapasitas');
+            $table->string('lokasi');
+
+            $table->enum('status', ['tersedia','terpakai','reservasi']);
             $table->timestamps();
         });
     }

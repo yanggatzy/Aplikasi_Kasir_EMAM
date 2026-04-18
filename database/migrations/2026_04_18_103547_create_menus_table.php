@@ -11,8 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menus', function (Blueprint $table) {
+       Schema::create('menus', function (Blueprint $table) {
             $table->id();
+         
+            $table->foreignId('id_kategori')
+            ->constrained('kategoris')
+            ->cascadeOnDelete();
+
+            $table->string('nama_menu');
+            $table->double('harga');
+            $table->string('gambar')->nullable();
+            $table->enum('status', ['tersedia','habis']);
             $table->timestamps();
         });
     }
