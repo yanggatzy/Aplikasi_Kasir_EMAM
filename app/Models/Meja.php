@@ -21,7 +21,7 @@ class Meja extends Model
      */
     public function transaksi(): HasMany
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaksi::class, 'id_meja');
     }
 
     public function tambahMeja() {}

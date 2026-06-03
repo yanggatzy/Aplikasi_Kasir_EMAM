@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
 {
@@ -15,9 +16,14 @@ class Menu extends Model
         'status'];
 
 
-        public function category(): BelongsTo
+        public function kategori(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'id_kategori');
+    }
+
+        public function detailTransaksis(): HasMany
+    {
+        return $this->hasMany(DetailTransaksi::class, 'id_menu');
     }
 
     public function tambahMenu() {}

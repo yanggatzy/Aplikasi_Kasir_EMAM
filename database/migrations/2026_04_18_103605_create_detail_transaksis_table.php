@@ -24,6 +24,7 @@ return new class extends Migration
 
             $table->integer('jumlah');
             $table->double('subtotal');
+            $table->text('notes')->nullable();
 
             $table->timestamps();
         });

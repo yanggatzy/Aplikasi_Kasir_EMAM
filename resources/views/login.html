@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Kasir - Emam Kasir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #FFF5F0 0%, #FFF5F0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: #FCF2ED;
+            border: 1px solid #EAE1DC;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-box {
+            width: 80px;
+            height: 80px;
+            background: #F8EAE4;
+            border-radius: 16px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        /* Login Title */
+        .login-title {
+            text-align: center;
+            color: #4A3B32;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .error-message{
+            background:#FEE2E2;
+            color:#B91C1C;
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:16px;
+            text-align:center;
+            font-size:14px;
+        }
+
+        /* Form */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Form Group */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #4A3B32;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-left: 0.25rem;
+        }
+
+        /* Input Container */
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #F4E3DC;
+            border-radius: 9999px;
+            padding: 1rem 1.5rem;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #D35400;
+            box-shadow: 0 0 0 3px rgba(211, 84, 0, 0.1);
+        }
+
+        .input-icon {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-icon svg {
+            width: 20px;
+            height: auto;
+            color: #4A3B32;
+        }
+
+        .input-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #4A3B32;
+            padding: 0;
+        }
+
+        .input-container input::placeholder {
+            color: #8D7B72;
+        }
+
+        /* Password Toggle Button */
+        .password-toggle {
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            opacity: 0.7;
+        }
+
+        .password-toggle svg {
+            width: 19px;
+            height: auto;
+            color: #4A3B32;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: #D35400;
+            color: #FFF;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            margin-top: 2rem;
+            width: 100%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+            }
+
+            .login-title {
+                font-size: 12px;
+                margin-bottom: 1.5rem;
+            }
+
+            .input-container {
+                padding: 0.875rem 1.25rem;
+            }
+
+            .input-container input {
+                font-size: 15px;
+            }
+
+            .submit-btn {
+                padding: 0.875rem 1.25rem;
+                font-size: 15px;
+                margin-top: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="logo-section">
+            <div class="logo-box">
+                <img src="{{ asset('images/logo.png') }}" alt="Emam Kasir Logo">
+            </div>
+        </div>
+
+        <!-- Login Title -->
+        <h1 class="login-title">Login</h1>
+
+        @if(session('error'))
+        <div class="error-message">
+            {{ session('error') }}
+        </div>
+        @endif
+
+        <!-- Form -->
+        <form class="login-form" method="POST" action="{{ route('login') }}" id="loginForm">
+            @csrf
+            <!-- Username Input -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-container">
+                    <div class="input-icon">
+                        <svg viewBox="0 0 46 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M30.6667 6.66667C29.75 6.66667 28.9653 6.34028 28.3125 5.6875C27.6597 5.03472 27.3333 4.25 27.3333 3.33333C27.3333 2.41667 27.6597 1.63194 28.3125 0.979167C28.9653 0.326389 29.75 0 30.6667 0C31.5833 0 32.3681 0.326389 33.0208 0.979167C33.6736 1.63194 34 2.41667 34 3.33333C34 4.25 33.6736 5.03472 33.0208 5.6875C32.3681 6.34028 31.5833 6.66667 30.6667 6.66667V6.66667M24 13.3333V11C24 10.5278 24.1215 10.0938 24.3646 9.69792C24.6076 9.30208 24.9306 9 25.3333 8.79167C26.1944 8.36111 27.0694 8.03819 27.9583 7.82292C28.8472 7.60764 29.75 7.5 30.6667 7.5C31.5833 7.5 32.4861 7.60764 33.375 7.82292C34.2639 8.03819 35.1389 8.36111 36 8.79167C36.4028 9 36.7257 9.30208 36.9688 9.69792C37.2118 10.0938 37.3333 10.5278 37.3333 11V13.3333H24V13.3333M25.6667 11.6667H35.6667V11C35.6667 10.8472 35.6285 10.7083 35.5521 10.5833C35.4757 10.4583 35.375 10.3611 35.25 10.2917C34.5 9.91667 33.7431 9.63542 32.9792 9.44792C32.2153 9.26042 31.4444 9.16667 30.6667 9.16667C29.8889 9.16667 29.1181 9.26042 28.3542 9.44792C27.5903 9.63542 26.8333 9.91667 26.0833 10.2917C25.9583 10.3611 25.8576 10.4583 25.7812 10.5833C25.7049 10.7083 25.6667 10.8472 25.6667 11V11.6667V11.6667M30.6667 5C31.125 5 31.5174 4.83681 31.8438 4.51042C32.1701 4.18403 32.3333 3.79167 32.3333 3.33333C32.3333 2.875 32.1701 2.48264 31.8438 2.15625C31.5174 1.82986 31.125 1.66667 30.6667 1.66667C30.2083 1.66667 29.816 1.82986 29.4896 2.15625C29.1632 2.48264 29 2.875 29 3.33333C29 3.79167 29.1632 4.18403 29.4896 4.51042C29.816 4.83681 30.2083 5 30.6667 5V5M30.6667 3.33333V3.33333V3.33333V3.33333V3.33333V3.33333V3.33333V3.33333V3.33333V3.33333M30.6667 11.6667V11.6667V11.6667V11.6667V11.6667V11.6667V11.6667V11.6667V11.6667V11.6667V11.6667V11.6667V11.6667" fill="#4A3B32"/>
+                        </svg>
+                    </div>
+                    <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="Masukkan Username" required>
+                </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-container">
+                    <div class="input-icon">
+                        <svg viewBox="0 0 46 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M25.6667 17.5C25.2083 17.5 24.816 17.3368 24.4896 17.0104C24.1632 16.684 24 16.2917 24 15.8333V7.5C24 7.04167 24.1632 6.64931 24.4896 6.32292C24.816 5.99653 25.2083 5.83333 25.6667 5.83333H26.5V4.16667C26.5 3.01389 26.9062 2.03125 27.7188 1.21875C28.5312 0.40625 29.5139 0 30.6667 0C31.8194 0 32.8021 0.40625 33.6146 1.21875C34.4271 2.03125 34.8333 3.01389 34.8333 4.16667V5.83333H35.6667C36.125 5.83333 36.5174 5.99653 36.8438 6.32292C37.1701 6.64931 37.3333 7.04167 37.3333 7.5V15.8333C37.3333 16.2917 37.1701 16.684 36.8438 17.0104C36.5174 17.3368 36.125 17.5 35.6667 17.5H25.6667V17.5M25.6667 15.8333H35.6667V15.8333V15.8333V7.5V7.5V7.5H25.6667V7.5V7.5V15.8333V15.8333V15.8333V15.8333M30.6667 13.3333C31.125 13.3333 31.5174 13.1701 31.8438 12.8438C32.1701 12.5174 32.3333 12.125 32.3333 11.6667C32.3333 11.2083 32.1701 10.816 31.8438 10.4896C31.5174 10.1632 31.125 10 30.6667 10C30.2083 10 29.816 10.1632 29.4896 10.4896C29.1632 10.816 29 11.2083 29 11.6667C29 12.125 29.1632 12.5174 29.4896 12.8438C29.816 13.1701 30.2083 13.3333 30.6667 13.3333V13.3333M28.1667 5.83333H33.1667V4.16667C33.1667 3.47222 32.9236 2.88194 32.4375 2.39583C31.9514 1.90972 31.3611 1.66667 30.6667 1.66667C29.9722 1.66667 29.3819 1.90972 28.8958 2.39583C28.4097 2.88194 28.1667 3.47222 28.1667 4.16667V5.83333V5.83333M25.6667 15.8333V15.8333V15.8333V7.5V7.5V7.5V7.5V7.5V7.5V15.8333V15.8333V15.8333V15.8333V15.8333" fill="#4A3B32"/>
+                        </svg>
+                    </div>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <svg viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.16667 10C10.2083 10 11.0938 9.63542 11.8229 8.90625C12.5521 8.17708 12.9167 7.29167 12.9167 6.25C12.9167 5.20833 12.5521 4.32292 11.8229 3.59375C11.0938 2.86458 10.2083 2.5 9.16667 2.5C8.125 2.5 7.23958 2.86458 6.51042 3.59375C5.78125 4.32292 5.41667 5.20833 5.41667 6.25C5.41667 7.29167 5.78125 8.17708 6.51042 8.90625C7.23958 9.63542 8.125 10 9.16667 10V10M9.16667 8.5C8.54167 8.5 8.01042 8.28125 7.57292 7.84375C7.13542 7.40625 6.91667 6.875 6.91667 6.25C6.91667 5.625 7.13542 5.09375 7.57292 4.65625C8.01042 4.21875 8.54167 4 9.16667 4C9.79167 4 10.3229 4.21875 10.7604 4.65625C11.1979 5.09375 11.4167 5.625 11.4167 6.25C11.4167 6.875 11.1979 7.40625 10.7604 7.84375C10.3229 8.28125 9.79167 8.5 9.16667 8.5V8.5M9.16667 12.5C7.13889 12.5 5.29167 11.934 3.625 10.8021C1.95833 9.67014 0.75 8.15278 0 6.25C0.75 4.34722 1.95833 2.82986 3.625 1.69792C5.29167 0.565972 7.13889 0 9.16667 0C11.1944 0 13.0417 0.565972 14.7083 1.69792C16.375 2.82986 17.5833 4.34722 18.3333 6.25C17.5833 8.15278 16.375 9.67014 14.7083 10.8021C13.0417 11.934 11.1944 12.5 9.16667 12.5V12.5M9.16667 6.25V6.25V6.25V6.25V6.25V6.25V6.25V6.25V6.25V6.25M9.16667 10.8333C10.7361 10.8333 12.1771 10.4201 13.4896 9.59375C14.8021 8.76736 15.8056 7.65278 16.5 6.25C15.8056 4.84722 14.8021 3.73264 13.4896 2.90625C12.1771 2.07986 10.7361 1.66667 9.16667 1.66667C7.59722 1.66667 6.15625 2.07986 4.84375 2.90625C3.53125 3.73264 2.52778 4.84722 1.83333 6.25C2.52778 7.65278 3.53125 8.76736 4.84375 9.59375C6.15625 10.4201 7.59722 10.8333 9.16667 10.8333V10.8333" fill="#4A3B32"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">
+                Sign In
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9V9" fill="white"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Password visibility toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', (e) => {
+            e.preventDefault();
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+
+    </script>
+</body>
+</html>

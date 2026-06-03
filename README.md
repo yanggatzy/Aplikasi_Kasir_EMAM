@@ -1,3 +1,37 @@
+# Menjalankan Project
+php artisan serve
+
+# Migration
+php artisan migrate
+php artisan migrate:fresh
+php artisan migrate:fresh --seed
+
+# Membuat Model + Migration
+php artisan make:model Menu -m
+php artisan make:model Meja -m
+php artisan make:model Transaksi -m
+php artisan make:model DetailTransaksi -m
+
+# Membuat Controller
+php artisan make:controller AuthController
+php artisan make:controller DashboardController
+php artisan make:controller KasirController
+php artisan make:controller MejaController
+
+# Membuat Seeder
+php artisan make:seeder MenuSeeder
+
+# Menjalankan Seeder
+php artisan db:seed
+php artisan db:seed --class=MenuSeeder
+
+# Membersihkan Cache
+php artisan optimize:clear
+
+# Melihat Route
+php artisan route:list
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
