@@ -56,9 +56,20 @@ function handleToggle(checkbox) {
 /* ── Image preview ── */
 function previewAddImage(input) {
   const preview = document.getElementById('addUploadPreview');
+  const icon = document.getElementById('uploadIcon');
+  const text = document.getElementById('uploadText');
+
   if (input.files && input.files[0] && preview) {
     const reader = new FileReader();
-    reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+
+      if (icon) icon.style.display = 'none';
+      if (text) text.style.display = 'none';
+    };
+
     reader.readAsDataURL(input.files[0]);
   }
 }
