@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Riwayat Transaksi - Emam Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>window.APP = { csrf: '{{ csrf_token() }}' };</script>
   @vite(['resources/css/manager.css', 'resources/js/manager-transaksi.js'])
 </head>
 <body>
@@ -80,26 +81,6 @@
         <button class="btn-primary" style="padding:9px 20px;">Filter</button>
       </div>
 
-      @php
-      $transaksiData = [
-        ['TRX-202401','24 Oct 2023','14:20 PM','Meja 5 / T-05','176.000','QRIS'],
-        ['TRX-202402','24 Oct 2023','13:55 PM','Meja 3 / T-03','95.000','Cash'],
-        ['TRX-202403','24 Oct 2023','13:30 PM','Meja 8 / T-08','210.000','Transfer'],
-        ['TRX-202404','24 Oct 2023','12:45 PM','Meja 1 / T-01','145.000','QRIS'],
-        ['TRX-202405','24 Oct 2023','12:20 PM','Meja 6 / T-06','88.000','Cash'],
-        ['TRX-202406','24 Oct 2023','11:55 PM','Meja 2 / T-02','320.000','Transfer'],
-        ['TRX-202407','24 Oct 2023','11:30 PM','Meja 4 / T-04','67.000','Cash'],
-        ['TRX-202408','24 Oct 2023','11:05 PM','Meja 9 / T-09','194.000','QRIS'],
-        ['TRX-202409','23 Oct 2023','20:40 PM','Meja 7 / T-07','155.000','Cash'],
-        ['TRX-202410','23 Oct 2023','19:15 PM','Meja 3 / T-03','280.000','QRIS'],
-        ['TRX-202411','23 Oct 2023','18:50 PM','Meja 10 / T-10','112.000','Transfer'],
-        ['TRX-202412','23 Oct 2023','18:20 PM','Meja 2 / T-02','75.000','Cash'],
-        ['TRX-202413','23 Oct 2023','17:45 PM','Meja 5 / T-05','230.000','QRIS'],
-        ['TRX-202414','23 Oct 2023','17:10 PM','Meja 1 / T-01','98.000','Cash'],
-        ['TRX-202415','23 Oct 2023','16:35 PM','Meja 4 / T-04','170.000','Transfer'],
-      ];
-      @endphp
-
       <div class="table-card">
         <div class="table-wrap">
           <table>
@@ -107,30 +88,32 @@
               <tr>
                 <th>NO INVOICE</th>
                 <th>TANGGAL</th>
-                <th>PELANGGAN</th>
+                <th>MEJA / PELANGGAN</th>
                 <th>TOTAL BAYAR</th>
                 <th>METODE</th>
                 <th>STATUS</th>
-                <th>AKSI</th>
               </tr>
             </thead>
             <tbody>
-              @foreach($transaksiData as $trx)
+              @forelse($transaksis as $trx)
               <tr>
-                <td style="color:var(--orange);font-weight:700;">#{{ $trx[0] }}</td>
+                <td style="color:var(--orange);font-weight:700;">#TRX-{{ str_pad($trx->id, 6, '0', STR_PAD_LEFT) }}</td>
                 <td>
-                  <div>{{ $trx[1] }}</div>
-                  <div style="font-size:11px;color:#8D7B72;">{{ $trx[2] }}</div>
+                  <div>{{ \Carbon\Carbon::parse($trx->tanggal)->format('d M Y') }}</div>
+                  <div style="font-size:11px;color:#8D7B72;">{{ \Carbon\Carbon::parse($trx->tanggal)->format('H:i') }}</div>
                 </td>
-                <td style="color:#594238;">{{ $trx[3] }}</td>
+                <td style="color:#594238;">
+                  <div>{{ $trx->meja ? $trx->meja->nama_meja : 'Take Away' }}</div>
+                  <div style="font-size:11px;color:#8D7B72;">{{ $trx->nama_pelanggan ?? '-' }}</div>
+                </td>
                 <td>
                   <div style="font-size:10px;color:#8D7B72;">Rp</div>
-                  <div style="font-weight:700;">{{ $trx[4] }}</div>
+                  <div style="font-weight:700;">{{ number_format($trx->total, 0, ',', '.') }}</div>
                 </td>
                 <td>
-                  @if($trx[5] === 'Cash')
+                  @if($trx->metode_pembayaran === 'cash')
                     <span class="badge badge-cash">Cash</span>
-                  @elseif($trx[5] === 'QRIS')
+                  @elseif($trx->metode_pembayaran === 'qris')
                     <span class="badge badge-qris">QRIS</span>
                   @else
                     <span class="badge badge-transfer">Transfer</span>
@@ -142,14 +125,12 @@
                     SUCCESS
                   </span>
                 </td>
-                <td>
-                  <button class="btn-outline" onclick="openModal('strutModal')" style="white-space:nowrap;">
-                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 16C3.45 16 2.97917 15.8042 2.5875 15.4125C2.19583 15.0208 2 14.55 2 14V11H4V14H16V11H18V14C18 14.55 17.8042 15.0208 17.4125 15.4125C17.0208 15.8042 16.55 16 16 16H4ZM10 13L6 9L7.4 7.55L9 9.15V4H11V9.15L12.6 7.55L14 9L10 13ZM4 8V6H2V4C2 3.45 2.19583 2.97917 2.5875 2.5875C2.97917 2.19583 3.45 2 4 2H16C16.55 2 17.0208 2.19583 17.4125 2.5875C17.8042 2.97917 18 3.45 18 4V6H16V4H4V6H2V8H4Z" fill="#594238"/></svg>
-                    Cetak Struk
-                  </button>
-                </td>
               </tr>
-              @endforeach
+              @empty
+              <tr>
+                <td colspan="6" style="text-align:center;color:#8D7B72;padding:2rem;">Belum ada transaksi</td>
+              </tr>
+              @endforelse
             </tbody>
           </table>
         </div>

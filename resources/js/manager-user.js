@@ -1,3 +1,5 @@
+const CSRF = window.APP.csrf;
+
 /* ── Dynamic Date ── */
 (function(){
   const b=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -29,17 +31,76 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-/* ── Password toggle ── */
-function togglePassword(inputId, btnId) {
-  const input = document.getElementById(inputId);
-  if (!input) return;
-  input.type = input.type === 'password' ? 'text' : 'password';
+/* ── CRUD User ── */
+
+function openEditUser(id, username) {
+  document.getElementById('editIdUser').value = id;
+  document.getElementById('editUsernameUser').value = username;
+  document.getElementById('editPasswordUser').value = '';
+  openModal('editUserModal');
 }
 
-/* ── Role radio selection ── */
-function selectRole(item, role) {
-  const group = item.closest('.radio-group');
-  if (!group) return;
-  group.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
-  item.classList.add('selected');
+function openHapusUser(id) {
+  document.getElementById('hapusIdUser').value = id;
+  openModal('hapusUserModal');
 }
+
+async function submitTambahUser() {
+  const username = document.getElementById('addUsernameUser').value.trim();
+  const password = document.getElementById('addPasswordUser').value;
+  const role     = document.getElementById('addRoleUser').value;
+  if (!username || !password) { alert('Username dan password wajib diisi'); return; }
+
+  const res = await fetch('/manager/user', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+    body: JSON.stringify({ username, password, role }),
+  });
+  const data = await res.json();
+  if (data.success) { closeModal('addUserModal'); window.location.reload(); }
+  else {
+    const msg = data.errors ? Object.values(data.errors).flat().join('\n') : 'Gagal menambah user';
+    alert(msg);
+  }
+}
+
+async function submitEditUser() {
+  const id       = document.getElementById('editIdUser').value;
+  const username = document.getElementById('editUsernameUser').value.trim();
+  const password = document.getElementById('editPasswordUser').value;
+  if (!username) { alert('Username wajib diisi'); return; }
+
+  const body = { username };
+  if (password) body.password = password;
+
+  const res = await fetch(`/manager/user/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (data.success) { closeModal('editUserModal'); window.location.reload(); }
+  else {
+    const msg = data.errors ? Object.values(data.errors).flat().join('\n') : 'Gagal menyimpan perubahan';
+    alert(msg);
+  }
+}
+
+async function submitHapusUser() {
+  const id = document.getElementById('hapusIdUser').value;
+  const res = await fetch(`/manager/user/${id}`, {
+    method: 'DELETE',
+    headers: { 'X-CSRF-TOKEN': CSRF },
+  });
+  const data = await res.json();
+  if (data.success) { closeModal('hapusUserModal'); window.location.reload(); }
+  else alert(data.message || 'Gagal menghapus user');
+}
+
+window.openModal        = openModal;
+window.closeModal       = closeModal;
+window.openEditUser     = openEditUser;
+window.openHapusUser    = openHapusUser;
+window.submitTambahUser = submitTambahUser;
+window.submitEditUser   = submitEditUser;
+window.submitHapusUser  = submitHapusUser;

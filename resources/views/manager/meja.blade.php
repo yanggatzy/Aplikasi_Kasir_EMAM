@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manajemen Meja - Emam Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>window.APP = { csrf: '{{ csrf_token() }}' };</script>
   @vite(['resources/css/manager.css', 'resources/js/manager-meja.js'])
 </head>
 <body>
@@ -66,59 +67,24 @@
         <p class="section-heading">Daftar Seluruh Meja</p>
       </div>
 
-      @php
-      // Generate meja data
-      $mejaData = [];
-      // T- INDOOR (T-01 to T-12)
-      for($i=1;$i<=12;$i++){
-        $id = 'T-'.str_pad($i,2,'0',STR_PAD_LEFT);
-        $aktif = ($i !== 2);
-        $kursi = ($i === 2) ? 8 : 4;
-        $mejaData[] = ['id'=>$id,'nama'=>'Meja '.str_pad($i,2,'0',STR_PAD_LEFT),'zone'=>'INDOOR','kursi'=>$kursi,'aktif'=>$aktif];
-      }
-      // B- OUTDOOR (B-01 to B-08)
-      for($i=1;$i<=8;$i++){
-        $id = 'B-'.str_pad($i,2,'0',STR_PAD_LEFT);
-        $mejaData[] = ['id'=>$id,'nama'=>'Meja B'.str_pad($i,2,'0',STR_PAD_LEFT),'zone'=>'OUTDOOR','kursi'=>1,'aktif'=>true];
-      }
-      // O- OUTDOOR (O-01 to O-08)
-      for($i=1;$i<=8;$i++){
-        $id = 'O-'.str_pad($i,2,'0',STR_PAD_LEFT);
-        $mejaData[] = ['id'=>$id,'nama'=>'Meja O'.str_pad($i,2,'0',STR_PAD_LEFT),'zone'=>'OUTDOOR','kursi'=>4,'aktif'=>true];
-      }
-      @endphp
-
       <div class="meja-grid">
-        @foreach($mejaData as $meja)
+        @foreach($mejas as $meja)
         <div class="meja-card">
           <div class="meja-card-top">
-            @if($meja['aktif'])
-              <span class="badge-aktif-meja">AKTIF</span>
-            @else
-              <span class="badge-nonaktif-meja">NON-AKTIF</span>
-            @endif
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#9CA3AF;cursor:grab;opacity:0.5;">
-              <rect y="0" width="16" height="2" rx="1" fill="#9CA3AF"/>
-              <rect y="5" width="16" height="2" rx="1" fill="#9CA3AF"/>
-              <rect y="10" width="16" height="2" rx="1" fill="#9CA3AF"/>
-            </svg>
+            <span class="badge-aktif-meja">{{ strtoupper($meja->status) }}</span>
           </div>
-          <div class="meja-id {{ $meja['aktif'] ? 'aktif' : 'nonaktif' }}">{{ $meja['id'] }}</div>
+          <div class="meja-id aktif">{{ $meja->kode_meja }}</div>
           <div class="meja-info">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 22V17H2V7H8V2H16V7H22V17H20V22H18V17H6V22H4ZM4 9V15H20V9H16V7H8V9H4Z" fill="#594238"/></svg>
-            {{ $meja['kursi'] }} Kursi &bull; {{ $meja['zone'] }}
+            {{ $meja->kapasitas }} Kursi &bull; {{ $meja->lokasi }}
           </div>
-          <div class="meja-name">{{ $meja['nama'] }}</div>
+          <div class="meja-name">{{ $meja->nama_meja }}</div>
           <div class="meja-card-bottom">
-            <label class="toggle-switch">
-              <input type="checkbox" {{ $meja['aktif'] ? 'checked' : '' }} onchange="handleToggle(this)">
-              <span class="toggle-track"></span>
-            </label>
             <div class="spacer"></div>
-            <button class="btn-icon" onclick="openModal('editMejaModal')" title="Edit" style="width:30px;height:30px;">
+            <button class="btn-icon" onclick="openEditMeja({{ $meja->id }}, '{{ addslashes($meja->nama_meja) }}', {{ $meja->kapasitas }}, '{{ $meja->lokasi }}')" title="Edit" style="width:30px;height:30px;">
               <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg>
             </button>
-            <button class="btn-icon btn-danger" onclick="openModal('hapusMejaModal')" title="Hapus" style="width:30px;height:30px;">
+            <button class="btn-icon btn-danger" onclick="openHapusMeja({{ $meja->id }})" title="Hapus" style="width:30px;height:30px;">
               <svg width="12" height="12" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg>
             </button>
           </div>
@@ -134,27 +100,27 @@
   <div class="modal-card">
     <p class="modal-title">Tambah Meja Baru</p>
     <div class="form-group">
-      <label class="form-label">ID Meja</label>
-      <input class="form-input" type="text" placeholder="Contoh: M-01">
+      <label class="form-label">Kode Meja</label>
+      <input id="addKodeMeja" class="form-input" type="text" placeholder="Contoh: T-01">
     </div>
     <div class="form-group">
       <label class="form-label">Nama Meja</label>
-      <input class="form-input" type="text" placeholder="Contoh: Meja Depan 1">
+      <input id="addNamaMeja" class="form-input" type="text" placeholder="Contoh: Meja Depan 1">
     </div>
     <div class="form-group">
       <label class="form-label">Zona</label>
-      <select class="form-select">
-        <option>INDOOR</option>
-        <option>OUTDOOR</option>
+      <select id="addLokasiMeja" class="form-select">
+        <option value="INDOOR">INDOOR</option>
+        <option value="OUTDOOR">OUTDOOR</option>
       </select>
     </div>
     <div class="form-group">
-      <label class="form-label">Kapasitas</label>
-      <input class="form-input" type="text" placeholder="6 kursi">
+      <label class="form-label">Kapasitas (kursi)</label>
+      <input id="addKapasitasMeja" class="form-input" type="number" placeholder="4" min="1">
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('addMejaModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('addMejaModal')">Tambah Meja</button>
+      <button class="btn-modal-submit" onclick="submitTambahMeja()">Tambah Meja</button>
     </div>
   </div>
 </div>
@@ -163,28 +129,25 @@
 <div id="editMejaModal" class="modal-overlay hidden">
   <div class="modal-card">
     <p class="modal-title">Edit Meja</p>
-    <div class="form-group">
-      <label class="form-label">ID Meja</label>
-      <input class="form-input" type="text" value="T-01">
-    </div>
+    <input type="hidden" id="editIdMeja">
     <div class="form-group">
       <label class="form-label">Nama Meja</label>
-      <input class="form-input" type="text" value="Meja 01">
+      <input id="editNamaMeja" class="form-input" type="text">
     </div>
     <div class="form-group">
       <label class="form-label">Zona</label>
-      <select class="form-select">
-        <option selected>INDOOR</option>
-        <option>OUTDOOR</option>
+      <select id="editLokasiMeja" class="form-select">
+        <option value="INDOOR">INDOOR</option>
+        <option value="OUTDOOR">OUTDOOR</option>
       </select>
     </div>
     <div class="form-group">
-      <label class="form-label">Kapasitas</label>
-      <input class="form-input" type="text" value="4 kursi">
+      <label class="form-label">Kapasitas (kursi)</label>
+      <input id="editKapasitasMeja" class="form-input" type="number" min="1">
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('editMejaModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('editMejaModal')">Simpan Perubahan</button>
+      <button class="btn-modal-submit" onclick="submitEditMeja()">Simpan Perubahan</button>
     </div>
   </div>
 </div>
@@ -192,11 +155,12 @@
 <!-- Hapus Meja Modal -->
 <div id="hapusMejaModal" class="modal-overlay hidden">
   <div class="modal-card modal-card-sm">
+    <input type="hidden" id="hapusIdMeja">
     <div class="modal-icon-wrap"><svg width="22" height="22" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#1C1C1C"/></svg></div>
     <p class="modal-title">Hapus Meja?</p>
     <p class="modal-subtitle">Data meja akan dihapus permanen dan tidak bisa dipulihkan.</p>
     <div class="modal-btn-stack" style="margin-top:4px;">
-      <button class="btn-hapus" onclick="closeModal('hapusMejaModal')">Hapus</button>
+      <button class="btn-hapus" onclick="submitHapusMeja()">Hapus</button>
       <button class="btn-batal-pill" onclick="closeModal('hapusMejaModal')">Batal</button>
     </div>
   </div>

@@ -14,10 +14,10 @@ return new class extends Migration
        Schema::create('mejas', function (Blueprint $table) {
             $table->id();
             $table->string('kode_meja');
+            $table->string('nama_meja');
             $table->integer('kapasitas');
             $table->string('lokasi');
-
-            $table->enum('status', ['tersedia','terpakai','reservasi']);
+            $table->enum('status', ['tersedia','terisi','kotor','dipesan']);
             $table->timestamps();
         });
     }

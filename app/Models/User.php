@@ -21,11 +21,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function getAuthIdentifierName()
-    {
-        return 'username';
-    }
-
     public function transaksis(): HasMany
     {
         return $this->hasMany(Transaksi::class, 'id_user');

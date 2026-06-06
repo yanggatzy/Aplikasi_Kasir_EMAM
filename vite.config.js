@@ -25,6 +25,8 @@ export default defineConfig({
                 'resources/js/manager-transaksi.js',
                 'resources/js/manager-laporan.js',
                 'resources/js/manager-detail-laporan.js',
+                'resources/css/menu-publik.css',
+                'resources/js/menu-publik.js',
             ],
             refresh: true,
         }),

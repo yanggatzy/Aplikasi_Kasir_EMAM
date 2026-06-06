@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menu - Emam Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>window.APP = { csrf: '{{ csrf_token() }}' };</script>
   @vite(['resources/css/manager.css', 'resources/js/manager-menu.js'])
 </head>
 <body>
@@ -100,11 +101,9 @@
       <!-- Category filter pills -->
       <div class="filter-pills" id="categoryPills">
         <button class="pill active" data-cat="all">Semua Menu</button>
-        <button class="pill" data-cat="Makanan Utama">Makanan Utama</button>
-        <button class="pill" data-cat="Minuman Dingin">Minuman Dingin</button>
-        <button class="pill" data-cat="Appetizer">Appetizer</button>
-        <button class="pill" data-cat="Dessert">Dessert</button>
-        <button class="pill" data-cat="Minuman">Minuman</button>
+        @foreach($kategoris as $kat)
+        <button class="pill" data-cat="{{ $kat->nama_kategori }}">{{ $kat->nama_kategori }}</button>
+        @endforeach
       </div>
 
       <div class="table-card">
@@ -120,40 +119,33 @@
               </tr>
             </thead>
             <tbody>
-              @php
-              $menuItems = [
-                ['Nasi Goreng Spesial','Makanan Utama','20.000',true],
-                ['Ayam Bakar Madu','Makanan Utama','42.000',true],
-                ['Es Jeruk Peras','Minuman Dingin','6.000',true],
-                ['Kentang Goreng','Appetizer','15.000',true],
-                ['Pisang Keju','Dessert','16.000',false],
-                ['Es Teh Manis','Minuman Dingin','6.000',true],
-                ['Soto Ayam','Makanan Utama','18.000',true],
-              ];
-              @endphp
-              @foreach($menuItems as $item)
-              <tr data-cat="{{ $item[1] }}">
+              @foreach($menus as $m)
+              <tr data-cat="{{ $m->kategori->nama_kategori ?? '' }}">
                 <td>
                   <div style="display:flex;align-items:center;gap:12px;">
-                    <img src="{{ asset('images/mieayam.png') }}" alt="{{ $item[0] }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;">
-                    <span style="font-weight:700;">{{ $item[0] }}</span>
+                    @if($m->gambar)
+                      <img src="{{ asset('storage/' . $m->gambar) }}" alt="{{ $m->nama_menu }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                    @else
+                      <img src="{{ asset('images/mieayam.png') }}" alt="{{ $m->nama_menu }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                    @endif
+                    <span style="font-weight:700;">{{ $m->nama_menu }}</span>
                   </div>
                 </td>
-                <td style="color:#594238;">{{ $item[1] }}</td>
-                <td style="color:var(--orange);font-weight:700;">{{ $item[2] }}</td>
+                <td style="color:#594238;">{{ $m->kategori->nama_kategori ?? '-' }}</td>
+                <td style="color:var(--orange);font-weight:700;">{{ number_format($m->harga, 0, ',', '.') }}</td>
                 <td>
                   <label class="toggle-switch">
-                    <input type="checkbox" {{ $item[3] ? 'checked' : '' }} onchange="handleToggle(this)">
+                    <input type="checkbox" {{ $m->status === 'tersedia' ? 'checked' : '' }} onchange="toggleMenu({{ $m->id }}, this)">
                     <span class="toggle-track"></span>
-                    <span class="toggle-label">{{ $item[3] ? 'Aktif' : 'Habis' }}</span>
+                    <span class="toggle-label" style="{{ $m->status === 'tersedia' ? 'color:var(--orange)' : '' }}">{{ $m->status === 'tersedia' ? 'Aktif' : 'Habis' }}</span>
                   </label>
                 </td>
                 <td>
                   <div style="display:flex;gap:6px;">
-                    <button class="btn-icon" onclick="openModal('editMenuModal')" title="Edit">
+                    <button class="btn-icon" onclick="openEditMenu({{ $m->id }}, '{{ addslashes($m->nama_menu) }}', {{ $m->id_kategori }}, {{ $m->harga }})" title="Edit">
                       <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg>
                     </button>
-                    <button class="btn-icon btn-danger" onclick="openModal('hapusMenuModal')" title="Hapus">
+                    <button class="btn-icon btn-danger" onclick="openHapusMenu({{ $m->id }})" title="Hapus">
                       <svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg>
                     </button>
                   </div>
@@ -174,41 +166,37 @@
     <p class="modal-title">Tambah Menu Baru</p>
     <div class="form-group">
       <label class="form-label">Item Menu</label>
-      <input class="form-input" type="text" placeholder="Nama menu">
+      <input id="addNamaMenu" class="form-input" type="text" placeholder="Nama menu">
     </div>
     <div class="form-group">
       <label class="form-label">Kategori</label>
-      <select class="form-select">
-        <option>Makanan Utama</option>
-        <option>Minuman</option>
-        <option>Minuman Dingin</option>
-        <option>Snacks</option>
-        <option>Dessert</option>
-        <option>Paket Hemat</option>
-        <option>Appetizer</option>
+      <select id="addKategoriMenu" class="form-select">
+        @foreach($kategoris as $kat)
+        <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
+        @endforeach
       </select>
     </div>
     <div class="form-group">
       <label class="form-label">Harga</label>
       <div class="form-input-wrap">
         <span class="form-input-prefix">Rp</span>
-        <input class="form-input has-prefix" type="number" placeholder="0" min="0">
+        <input id="addHargaMenu" class="form-input has-prefix" type="number" placeholder="0" min="0">
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Foto Menu</label>
-      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fotoInput').click()">
-        <input type="file" id="fotoInput" accept="image/*" style="display:none;" onchange="previewImage(this)">
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('addFotoInput').click()">
+        <input type="file" id="addFotoInput" accept="image/*" style="display:none;" onchange="previewAddImage(this)">
         <div class="upload-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="#D35400"/></svg>
         </div>
         <div class="upload-text">Klik untuk unggah foto menu</div>
-        <img id="uploadPreview" src="" alt="" style="max-width:100%;border-radius:8px;display:none;margin-top:8px;">
+        <img id="addUploadPreview" src="" alt="" style="max-width:100%;border-radius:8px;display:none;margin-top:8px;">
       </div>
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('addMenuModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('addMenuModal')">Tambah Menu Baru</button>
+      <button class="btn-modal-submit" onclick="submitTambahMenu()">Tambah Menu Baru</button>
     </div>
   </div>
 </div>
@@ -217,39 +205,37 @@
 <div id="editMenuModal" class="modal-overlay hidden">
   <div class="modal-card">
     <p class="modal-title">Edit Menu</p>
+    <input type="hidden" id="editIdMenu">
     <div class="form-group">
       <label class="form-label">Item Menu</label>
-      <input class="form-input" type="text" value="Nasi Goreng Spesial">
+      <input id="editNamaMenu" class="form-input" type="text">
     </div>
     <div class="form-group">
       <label class="form-label">Kategori</label>
-      <select class="form-select">
-        <option selected>Makanan Utama</option>
-        <option>Minuman</option>
-        <option>Minuman Dingin</option>
-        <option>Snacks</option>
-        <option>Dessert</option>
-        <option>Paket Hemat</option>
-        <option>Appetizer</option>
+      <select id="editKategoriMenu" class="form-select">
+        @foreach($kategoris as $kat)
+        <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
+        @endforeach
       </select>
     </div>
     <div class="form-group">
       <label class="form-label">Harga</label>
       <div class="form-input-wrap">
         <span class="form-input-prefix">Rp</span>
-        <input class="form-input has-prefix" type="number" value="20000" min="0">
+        <input id="editHargaMenu" class="form-input has-prefix" type="number" min="0">
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Foto Menu</label>
-      <div class="upload-area">
-        <img src="{{ asset('images/mieayam.png') }}" alt="current" style="width:80px;height:80px;border-radius:8px;object-fit:cover;">
-        <div class="upload-text" style="font-size:11px;">Klik untuk ganti foto</div>
+      <label class="form-label">Foto Menu (kosongkan jika tidak ganti)</label>
+      <div class="upload-area" onclick="document.getElementById('editFotoInput').click()">
+        <input type="file" id="editFotoInput" accept="image/*" style="display:none;" onchange="previewEditImage(this)">
+        <div class="upload-text" style="font-size:12px;">Klik untuk ganti foto (opsional)</div>
+        <img id="editUploadPreview" src="" alt="" style="max-width:100%;border-radius:8px;display:none;margin-top:8px;">
       </div>
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('editMenuModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('editMenuModal')">Simpan Perubahan</button>
+      <button class="btn-modal-submit" onclick="submitEditMenu()">Simpan Perubahan</button>
     </div>
   </div>
 </div>
@@ -257,11 +243,12 @@
 <!-- Hapus Menu Modal -->
 <div id="hapusMenuModal" class="modal-overlay hidden">
   <div class="modal-card modal-card-sm">
+    <input type="hidden" id="hapusIdMenu">
     <div class="modal-icon-wrap"><svg width="22" height="22" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#1C1C1C"/></svg></div>
     <p class="modal-title">Hapus Menu?</p>
     <p class="modal-subtitle">Data menu akan dihapus permanen dan tidak bisa dipulihkan.</p>
     <div class="modal-btn-stack" style="margin-top:4px;">
-      <button class="btn-hapus" onclick="closeModal('hapusMenuModal')">Hapus</button>
+      <button class="btn-hapus" onclick="submitHapusMenu()">Hapus</button>
       <button class="btn-batal-pill" onclick="closeModal('hapusMenuModal')">Batal</button>
     </div>
   </div>

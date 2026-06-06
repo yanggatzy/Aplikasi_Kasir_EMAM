@@ -136,9 +136,7 @@
           <div>
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Pilih Meja</label>
             <select id="mejaSelect" style="width:100%;padding:12px 14px;border:1.5px solid #D35400;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;background:#fff;outline:none;">
-              @for($i = 1; $i <= 28; $i++)
-                <option value="T-{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">Meja {{ str_pad($i,2,'0',STR_PAD_LEFT) }}</option>
-              @endfor
+              <option value="">Memuat meja...</option>
             </select>
           </div>
           <div>
@@ -162,9 +160,7 @@
           <div>
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Pilih Meja</label>
             <select id="qrisMeja" style="width:100%;padding:12px 14px;border:1.5px solid #D35400;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;background:#fff;outline:none;">
-              @for($i = 1; $i <= 28; $i++)
-                <option value="T-{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">Meja {{ str_pad($i,2,'0',STR_PAD_LEFT) }}</option>
-              @endfor
+              <option value="">Memuat meja...</option>
             </select>
           </div>
           <div>
@@ -211,9 +207,7 @@
           <div>
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Pilih Meja</label>
             <select id="tfMeja" style="width:100%;padding:12px 14px;border:1.5px solid #D35400;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;background:#fff;outline:none;">
-              @for($i = 1; $i <= 28; $i++)
-                <option value="T-{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">Meja {{ str_pad($i,2,'0',STR_PAD_LEFT) }}</option>
-              @endfor
+              <option value="">Memuat meja...</option>
             </select>
           </div>
           <div>
@@ -396,9 +390,9 @@
 
 <script>
 window.APP = {
-  imgMenu: '{{ asset("images/mieayam.png") }}',
+  imgMenu:  '{{ asset("images/mieayam.png") }}',
   username: '{{ Auth::user()->username }}',
-  routeStatusMeja: '{{ url("/kasir/status-meja") }}'
+  csrf:     '{{ csrf_token() }}',
 };
 </script>
 @vite('resources/js/kasir.js')

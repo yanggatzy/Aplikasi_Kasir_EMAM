@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kategori - Emam Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>window.APP = { csrf: '{{ csrf_token() }}' };</script>
   @vite(['resources/css/manager.css', 'resources/js/manager-kategori.js'])
 </head>
 <body>
@@ -120,109 +121,33 @@
               </tr>
             </thead>
             <tbody>
+              @foreach($kategoris as $k)
               <tr>
                 <td>
-                  <div style="font-weight:700;">Makanan Utama</div>
-                  <div style="font-size:11px;color:#8D7B72;">ID: MENU-001</div>
+                  <div style="font-weight:700;">{{ $k->nama_kategori }}</div>
+                  <div style="font-size:11px;color:#8D7B72;">ID: {{ $k->id }}</div>
                 </td>
-                <td style="color:#594238;">Hidangan utama restoran</td>
-                <td>45</td>
+                <td style="color:#594238;">{{ $k->deskripsi ?? '-' }}</td>
+                <td>{{ $k->menus_count }}</td>
                 <td>
                   <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="handleToggle(this)">
+                    <input type="checkbox" {{ $k->status === 'aktif' ? 'checked' : '' }} onchange="toggleKategori({{ $k->id }}, this)">
                     <span class="toggle-track"></span>
-                    <span class="toggle-label">Aktif</span>
+                    <span class="toggle-label" style="{{ $k->status === 'aktif' ? 'color:var(--orange)' : '' }}">{{ $k->status === 'aktif' ? 'Aktif' : 'Non-Aktif' }}</span>
                   </label>
                 </td>
                 <td>
                   <div style="display:flex;gap:6px;">
-                    <button class="btn-icon" onclick="openModal('editKategoriModal')" title="Edit">
+                    <button class="btn-icon" onclick="openEditKategori({{ $k->id }}, '{{ addslashes($k->nama_kategori) }}', '{{ addslashes($k->deskripsi) }}')" title="Edit">
                       <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg>
                     </button>
-                    <button class="btn-icon btn-danger" onclick="openModal('hapusKategoriModal')" title="Hapus">
+                    <button class="btn-icon btn-danger" onclick="openHapusKategori({{ $k->id }})" title="Hapus">
                       <svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg>
                     </button>
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td><div style="font-weight:700;">Minuman</div><div style="font-size:11px;color:#8D7B72;">ID: MENU-002</div></td>
-                <td style="color:#594238;">Aneka minuman segar</td>
-                <td>22</td>
-                <td>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="handleToggle(this)">
-                    <span class="toggle-track"></span>
-                    <span class="toggle-label">Aktif</span>
-                  </label>
-                </td>
-                <td><div style="display:flex;gap:6px;"><button class="btn-icon" onclick="openModal('editKategoriModal')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button><button class="btn-icon btn-danger" onclick="openModal('hapusKategoriModal')"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button></div></td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:700;">Snacks</div><div style="font-size:11px;color:#8D7B72;">ID: MENU-003</div></td>
-                <td style="color:#594238;">Camilan dan gorengan</td>
-                <td>15</td>
-                <td>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="handleToggle(this)">
-                    <span class="toggle-track"></span>
-                    <span class="toggle-label">Aktif</span>
-                  </label>
-                </td>
-                <td><div style="display:flex;gap:6px;"><button class="btn-icon" onclick="openModal('editKategoriModal')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button><button class="btn-icon btn-danger" onclick="openModal('hapusKategoriModal')"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button></div></td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:700;">Dessert</div><div style="font-size:11px;color:#8D7B72;">ID: MENU-004</div></td>
-                <td style="color:#594238;">Pencuci mulut manis</td>
-                <td>10</td>
-                <td>
-                  <label class="toggle-switch">
-                    <input type="checkbox" onchange="handleToggle(this)">
-                    <span class="toggle-track"></span>
-                    <span class="toggle-label">Non-Aktif</span>
-                  </label>
-                </td>
-                <td><div style="display:flex;gap:6px;"><button class="btn-icon" onclick="openModal('editKategoriModal')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button><button class="btn-icon btn-danger" onclick="openModal('hapusKategoriModal')"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button></div></td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:700;">Paket Hemat</div><div style="font-size:11px;color:#8D7B72;">ID: MENU-005</div></td>
-                <td style="color:#594238;">Paket kombinasi murah</td>
-                <td>8</td>
-                <td>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="handleToggle(this)">
-                    <span class="toggle-track"></span>
-                    <span class="toggle-label">Aktif</span>
-                  </label>
-                </td>
-                <td><div style="display:flex;gap:6px;"><button class="btn-icon" onclick="openModal('editKategoriModal')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button><button class="btn-icon btn-danger" onclick="openModal('hapusKategoriModal')"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button></div></td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:700;">Appetizer</div><div style="font-size:11px;color:#8D7B72;">ID: MENU-006</div></td>
-                <td style="color:#594238;">Camilan pembuka selera</td>
-                <td>12</td>
-                <td>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="handleToggle(this)">
-                    <span class="toggle-track"></span>
-                    <span class="toggle-label">Aktif</span>
-                  </label>
-                </td>
-                <td><div style="display:flex;gap:6px;"><button class="btn-icon" onclick="openModal('editKategoriModal')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button><button class="btn-icon btn-danger" onclick="openModal('hapusKategoriModal')"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button></div></td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:700;">Minuman Dingin</div><div style="font-size:11px;color:#8D7B72;">ID: MENU-007</div></td>
-                <td style="color:#594238;">Aneka minuman segar dengan es</td>
-                <td>25</td>
-                <td>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="handleToggle(this)">
-                    <span class="toggle-track"></span>
-                    <span class="toggle-label">Aktif</span>
-                  </label>
-                </td>
-                <td><div style="display:flex;gap:6px;"><button class="btn-icon" onclick="openModal('editKategoriModal')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button><button class="btn-icon btn-danger" onclick="openModal('hapusKategoriModal')"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button></div></td>
-              </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -237,19 +162,15 @@
     <p class="modal-title">Tambah Kategori Baru</p>
     <div class="form-group">
       <label class="form-label">Nama Kategori</label>
-      <input class="form-input" type="text" placeholder="Masukkan nama kategori">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Jumlah Menu</label>
-      <input class="form-input" type="number" placeholder="0" min="0">
+      <input id="addNamaKategori" class="form-input" type="text" placeholder="Masukkan nama kategori">
     </div>
     <div class="form-group">
       <label class="form-label">Deskripsi</label>
-      <textarea class="form-textarea" placeholder="Deskripsi kategori..."></textarea>
+      <textarea id="addDeskripsiKategori" class="form-textarea" placeholder="Deskripsi kategori..."></textarea>
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('addKategoriModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('addKategoriModal')">Tambah Kategori</button>
+      <button class="btn-modal-submit" onclick="submitTambahKategori()">Tambah Kategori</button>
     </div>
   </div>
 </div>
@@ -258,21 +179,18 @@
 <div id="editKategoriModal" class="modal-overlay hidden">
   <div class="modal-card">
     <p class="modal-title">Edit Kategori</p>
+    <input type="hidden" id="editIdKategori">
     <div class="form-group">
       <label class="form-label">Nama Kategori</label>
-      <input class="form-input" type="text" value="Makanan Utama">
+      <input id="editNamaKategori" class="form-input" type="text">
     </div>
     <div class="form-group">
       <label class="form-label">Deskripsi</label>
-      <textarea class="form-textarea">Hidangan utama restoran</textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Jumlah Menu</label>
-      <input class="form-input" type="number" value="45" min="0">
+      <textarea id="editDeskripsiKategori" class="form-textarea"></textarea>
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('editKategoriModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('editKategoriModal')">Simpan Perubahan</button>
+      <button class="btn-modal-submit" onclick="submitEditKategori()">Simpan Perubahan</button>
     </div>
   </div>
 </div>
@@ -280,13 +198,14 @@
 <!-- Hapus Kategori Modal -->
 <div id="hapusKategoriModal" class="modal-overlay hidden">
   <div class="modal-card modal-card-sm">
+    <input type="hidden" id="hapusIdKategori">
     <div class="modal-icon-wrap">
       <svg width="22" height="22" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#1C1C1C"/></svg>
     </div>
     <p class="modal-title">Hapus Kategori?</p>
     <p class="modal-subtitle">Data kategori akan dihapus permanen dan tidak bisa dipulihkan.</p>
     <div class="modal-btn-stack" style="margin-top:4px;">
-      <button class="btn-hapus" onclick="closeModal('hapusKategoriModal')">Hapus</button>
+      <button class="btn-hapus" onclick="submitHapusKategori()">Hapus</button>
       <button class="btn-batal-pill" onclick="closeModal('hapusKategoriModal')">Batal</button>
     </div>
   </div>

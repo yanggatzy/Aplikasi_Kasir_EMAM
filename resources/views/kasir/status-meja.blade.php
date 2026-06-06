@@ -133,7 +133,7 @@
 
 <script>
 window.APP = {
-  routeStatusMeja: '{{ url("/kasir/status-meja") }}'
+  csrf: '{{ csrf_token() }}',
 };
 </script>
 @vite('resources/js/status-meja.js')

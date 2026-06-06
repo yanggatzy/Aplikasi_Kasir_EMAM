@@ -40,3 +40,6 @@ if (searchInput) {
     });
   });
 }
+
+window.openModal  = openModal;
+window.closeModal = closeModal;

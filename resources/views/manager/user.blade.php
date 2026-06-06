@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tambah User - Emam Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>window.APP = { csrf: '{{ csrf_token() }}' };</script>
   @vite(['resources/css/manager.css', 'resources/js/manager-user.js'])
 </head>
 <body>
@@ -76,35 +77,23 @@
               </tr>
             </thead>
             <tbody>
-              @php
-              $users = [
-                [1,'User1','manager','Password123'],
-                [2,'Andi','kasir','Kasir1'],
-                [3,'Budi','kasir','Kasir2'],
-                [4,'Citra','kasir','Kasir4'],
-                [5,'Dedi','kasir','Kasir5'],
-                [6,'Eka','kasir','Kasir6'],
-                [7,'Fajar','kasir','Kasir7'],
-                [8,'Gita','kasir','Kasir8'],
-              ];
-              @endphp
-              @foreach($users as $user)
+              @foreach($users as $i => $user)
               <tr>
-                <td style="color:#594238;">{{ $user[0] }}</td>
+                <td style="color:#594238;">{{ $i + 1 }}</td>
                 <td>
                   <div style="width:40px;height:40px;border-radius:50%;border:2px solid var(--orange);display:flex;align-items:center;justify-content:center;background:var(--orange-bg);">
                     <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 8C6.9 8 5.95833 7.60833 5.175 6.825C4.39167 6.04167 4 5.1 4 4C4 2.9 4.39167 1.95833 5.175 1.175C5.95833 0.391667 6.9 0 8 0C9.1 0 10.0417 0.391667 10.825 1.175C11.6083 1.95833 12 2.9 12 4C12 5.1 11.6083 6.04167 10.825 6.825C10.0417 7.60833 9.1 8 8 8ZM0 16V13.2C0 12.6333 0.145833 12.1125 0.4375 11.6375C0.729167 11.1625 1.11667 10.8 1.6 10.55C2.63333 10.0333 3.68333 9.64583 4.75 9.3875C5.81667 9.12917 6.9 9 8 9C9.1 9 10.1833 9.12917 11.25 9.3875C12.3167 9.64583 13.3667 10.0333 14.4 10.55C14.8833 10.8 15.2708 11.1625 15.5625 11.6375C15.8542 12.1125 16 12.6333 16 13.2V16H0Z" fill="#D35400"/></svg>
                   </div>
                 </td>
                 <td>
-                  <div style="font-weight:700;">{{ $user[1] }}</div>
-                  <div style="font-size:11px;color:#8D7B72;">{{ $user[2] }}</div>
+                  <div style="font-weight:700;">{{ $user->username }}</div>
+                  <div style="font-size:11px;color:#8D7B72;">{{ $user->role }}</div>
                 </td>
-                <td style="color:var(--orange);font-weight:700;">{{ $user[3] }}</td>
+                <td style="color:#8D7B72;">••••••••</td>
                 <td>
                   <div style="display:flex;gap:6px;">
-                    <button class="btn-icon" onclick="openModal('editUserModal')" title="Edit"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button>
-                    <button class="btn-icon btn-danger" onclick="openModal('hapusUserModal')" title="Hapus"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button>
+                    <button class="btn-icon" onclick="openEditUser({{ $user->id }}, '{{ addslashes($user->username) }}')" title="Edit"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg></button>
+                    <button class="btn-icon btn-danger" onclick="openHapusUser({{ $user->id }})" title="Hapus"><svg width="14" height="14" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#DC2626"/></svg></button>
                   </div>
                 </td>
               </tr>
@@ -123,38 +112,22 @@
     <p class="modal-title">Tambah User Baru</p>
     <div class="form-group">
       <label class="form-label">Username</label>
-      <div class="form-input-wrap">
-        <input class="form-input" type="text" placeholder="Username" style="padding-right:40px;">
-        <span class="form-input-suffix" style="pointer-events:none;">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 8C6.9 8 5.95833 7.60833 5.175 6.825C4.39167 6.04167 4 5.1 4 4C4 2.9 4.39167 1.95833 5.175 1.175C5.95833 0.391667 6.9 0 8 0C9.1 0 10.0417 0.391667 10.825 1.175C11.6083 1.95833 12 2.9 12 4C12 5.1 11.6083 6.04167 10.825 6.825C10.0417 7.60833 9.1 8 8 8ZM0 16V13.2C0 12.6333 0.145833 12.1125 0.4375 11.6375C0.729167 11.1625 1.11667 10.8 1.6 10.55C2.63333 10.0333 3.68333 9.64583 4.75 9.3875C5.81667 9.12917 6.9 9 8 9C9.1 9 10.1833 9.12917 11.25 9.3875C12.3167 9.64583 13.3667 10.0333 14.4 10.55C14.8833 10.8 15.2708 11.1625 15.5625 11.6375C15.8542 12.1125 16 12.6333 16 13.2V16H0Z" fill="#9CA3AF"/></svg>
-        </span>
-      </div>
+      <input id="addUsernameUser" class="form-input" type="text" placeholder="Username">
     </div>
     <div class="form-group">
       <label class="form-label">Password</label>
-      <div class="form-input-wrap">
-        <input id="addPasswordInput" class="form-input" type="password" placeholder="Password" style="padding-right:40px;">
-        <button type="button" class="form-input-suffix" onclick="togglePassword('addPasswordInput', 'eyeIcon1')" id="eyeIcon1">
-          <svg width="16" height="12" viewBox="0 0 20 14" fill="none"><path d="M10 11C11.25 11 12.3125 10.5625 13.1875 9.6875C14.0625 8.8125 14.5 7.75 14.5 6.5C14.5 5.25 14.0625 4.1875 13.1875 3.3125C12.3125 2.4375 11.25 2 10 2C8.75 2 7.6875 2.4375 6.8125 3.3125C5.9375 4.1875 5.5 5.25 5.5 6.5C5.5 7.75 5.9375 8.8125 6.8125 9.6875C7.6875 10.5625 8.75 11 10 11ZM10 9.2C9.25 9.2 8.6125 8.9375 8.0875 8.4125C7.5625 7.8875 7.3 7.25 7.3 6.5C7.3 5.75 7.5625 5.1125 8.0875 4.5875C8.6125 4.0625 9.25 3.8 10 3.8C10.75 3.8 11.3875 4.0625 11.9125 4.5875C12.4375 5.1125 12.7 5.75 12.7 6.5C12.7 7.25 12.4375 7.8875 11.9125 8.4125C11.3875 8.9375 10.75 9.2 10 9.2ZM10 13C7.56667 13 5.35 12.3208 3.35 10.9625C1.35 9.60417 -0.0666667 7.76667 -0.9 5.45C-0.0666667 3.11667 1.35 1.27917 3.35 -0.0791667C5.35 -1.42917 7.56667 -2.10417 10 -2.10417C12.4333 -2.10417 14.65 -1.42917 16.65 -0.0791667C18.65 1.27917 20.0667 3.11667 20.9 5.45C20.0667 7.76667 18.65 9.60417 16.65 10.9625C14.65 12.3208 12.4333 13 10 13Z" fill="#9CA3AF"/></svg>
-        </button>
-      </div>
+      <input id="addPasswordUser" class="form-input" type="password" placeholder="Password (min. 6 karakter)">
     </div>
     <div class="form-group">
       <label class="form-label">Role Akses</label>
-      <div class="radio-group" id="roleRadioGroup">
-        <div class="radio-item selected" onclick="selectRole(this, 'kasir')">
-          <div class="radio-dot"></div>
-          <span class="radio-text">Kasir</span>
-        </div>
-        <div class="radio-item" onclick="selectRole(this, 'manager')">
-          <div class="radio-dot"></div>
-          <span class="radio-text">Manager</span>
-        </div>
-      </div>
+      <select id="addRoleUser" class="form-select">
+        <option value="kasir">Kasir</option>
+        <option value="manager">Manager</option>
+      </select>
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('addUserModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('addUserModal')">Tambah User</button>
+      <button class="btn-modal-submit" onclick="submitTambahUser()">Tambah User</button>
     </div>
   </div>
 </div>
@@ -163,25 +136,18 @@
 <div id="editUserModal" class="modal-overlay hidden">
   <div class="modal-card">
     <p class="modal-title">Edit User</p>
+    <input type="hidden" id="editIdUser">
     <div class="form-group">
       <label class="form-label">Username</label>
-      <div class="form-input-wrap">
-        <input class="form-input" type="text" value="Andi" style="padding-right:40px;">
-        <span class="form-input-suffix" style="pointer-events:none;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 8C6.9 8 5.95833 7.60833 5.175 6.825C4.39167 6.04167 4 5.1 4 4C4 2.9 4.39167 1.95833 5.175 1.175C5.95833 0.391667 6.9 0 8 0C9.1 0 10.0417 0.391667 10.825 1.175C11.6083 1.95833 12 2.9 12 4C12 5.1 11.6083 6.04167 10.825 6.825C10.0417 7.60833 9.1 8 8 8ZM0 16V13.2C0 12.6333 0.145833 12.1125 0.4375 11.6375C0.729167 11.1625 1.11667 10.8 1.6 10.55C2.63333 10.0333 3.68333 9.64583 4.75 9.3875C5.81667 9.12917 6.9 9 8 9C9.1 9 10.1833 9.12917 11.25 9.3875C12.3167 9.64583 13.3667 10.0333 14.4 10.55C14.8833 10.8 15.2708 11.1625 15.5625 11.6375C15.8542 12.1125 16 12.6333 16 13.2V16H0Z" fill="#9CA3AF"/></svg></span>
-      </div>
+      <input id="editUsernameUser" class="form-input" type="text">
     </div>
     <div class="form-group">
-      <label class="form-label">Password</label>
-      <div class="form-input-wrap">
-        <input id="editPasswordInput" class="form-input" type="password" value="Kasir1" style="padding-right:40px;">
-        <button type="button" class="form-input-suffix" onclick="togglePassword('editPasswordInput', 'eyeIcon2')" id="eyeIcon2">
-          <svg width="16" height="12" viewBox="0 0 20 14" fill="none"><path d="M10 11C11.25 11 12.3125 10.5625 13.1875 9.6875C14.0625 8.8125 14.5 7.75 14.5 6.5C14.5 5.25 14.0625 4.1875 13.1875 3.3125C12.3125 2.4375 11.25 2 10 2C8.75 2 7.6875 2.4375 6.8125 3.3125C5.9375 4.1875 5.5 5.25 5.5 6.5C5.5 7.75 5.9375 8.8125 6.8125 9.6875C7.6875 10.5625 8.75 11 10 11ZM10 9.2C9.25 9.2 8.6125 8.9375 8.0875 8.4125C7.5625 7.8875 7.3 7.25 7.3 6.5C7.3 5.75 7.5625 5.1125 8.0875 4.5875C8.6125 4.0625 9.25 3.8 10 3.8C10.75 3.8 11.3875 4.0625 11.9125 4.5875C12.4375 5.1125 12.7 5.75 12.7 6.5C12.7 7.25 12.4375 7.8875 11.9125 8.4125C11.3875 8.9375 10.75 9.2 10 9.2ZM10 13C7.56667 13 5.35 12.3208 3.35 10.9625C1.35 9.60417 -0.0666667 7.76667 -0.9 5.45C-0.0666667 3.11667 1.35 1.27917 3.35 -0.0791667C5.35 -1.42917 7.56667 -2.10417 10 -2.10417C12.4333 -2.10417 14.65 -1.42917 16.65 -0.0791667C18.65 1.27917 20.0667 3.11667 20.9 5.45C20.0667 7.76667 18.65 9.60417 16.65 10.9625C14.65 12.3208 12.4333 13 10 13Z" fill="#9CA3AF"/></svg>
-        </button>
-      </div>
+      <label class="form-label">Password Baru (kosongkan jika tidak ganti)</label>
+      <input id="editPasswordUser" class="form-input" type="password" placeholder="Password baru...">
     </div>
     <div class="modal-btn-row">
       <button class="btn-modal-cancel" onclick="closeModal('editUserModal')">Batal</button>
-      <button class="btn-modal-submit" onclick="closeModal('editUserModal')">Simpan Perubahan</button>
+      <button class="btn-modal-submit" onclick="submitEditUser()">Simpan Perubahan</button>
     </div>
   </div>
 </div>
@@ -189,11 +155,12 @@
 <!-- Hapus User Modal -->
 <div id="hapusUserModal" class="modal-overlay hidden">
   <div class="modal-card modal-card-sm">
+    <input type="hidden" id="hapusIdUser">
     <div class="modal-icon-wrap"><svg width="22" height="22" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#1C1C1C"/></svg></div>
     <p class="modal-title">Hapus User?</p>
     <p class="modal-subtitle">Akun user akan dihapus permanen.</p>
     <div class="modal-btn-stack" style="margin-top:4px;">
-      <button class="btn-hapus" onclick="closeModal('hapusUserModal')">Hapus</button>
+      <button class="btn-hapus" onclick="submitHapusUser()">Hapus</button>
       <button class="btn-batal-pill" onclick="closeModal('hapusUserModal')">Batal</button>
     </div>
   </div>

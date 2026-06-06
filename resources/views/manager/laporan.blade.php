@@ -76,8 +76,8 @@
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 10C8.33 10 6.9 9.42 5.7 8.25C4.5 7.08 3.9 5.67 3.9 4C3.9 2.33 4.5 0.92 5.7 -0.25C6.9 -1.42 8.33 -2 10 -2C11.67 -2 13.1 -1.42 14.3 -0.25C15.5 0.92 16.1 2.33 16.1 4V5H18V7H2V5H3.9V4C3.9 2.33 4.5 0.92 5.7 -0.25C6.9 -1.42 8.33 -2 10 -2ZM2 9H18V18C18 18.55 17.8 19.02 17.4 19.42C17 19.82 16.53 20 16 20H4C3.47 20 3 19.82 2.6 19.42C2.2 19.02 2 18.55 2 18V9ZM8 12V17H10V12H8ZM12 12V17H14V12H12ZM6 12V17H8V12H6Z" fill="#D97706"/></svg>
           </div>
           <div>
-            <div class="stat-label">Total Pendapatan Bulan Ini</div>
-            <div class="stat-value" style="font-size:18px;">Rp 245.845.000</div>
+            <div class="stat-label">Total Pendapatan</div>
+            <div class="stat-value" style="font-size:18px;">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
           </div>
         </div>
         <div class="stat-card">
@@ -86,7 +86,7 @@
           </div>
           <div>
             <div class="stat-label">Total Transaksi</div>
-            <div class="stat-value">3.450</div>
+            <div class="stat-value">{{ number_format($totalTransaksi, 0, ',', '.') }}</div>
           </div>
         </div>
         <div class="stat-card">
@@ -94,8 +94,8 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 18C6.16667 18 5.45833 17.7083 4.875 17.125C4.29167 16.5417 4 15.8333 4 15V9C4 8.16667 4.29167 7.45833 4.875 6.875C5.45833 6.29167 6.16667 6 7 6H17C17.8333 6 18.5417 6.29167 19.125 6.875C19.7083 7.45833 20 8.16667 20 9V15C20 15.8333 19.7083 16.5417 19.125 17.125C18.5417 17.7083 17.8333 18 17 18H7ZM9 9L12 7L15 9V15H13V11.5L12 12L11 11.5V15H9V9Z" fill="#16A34A"/></svg>
           </div>
           <div>
-            <div class="stat-label">Item Terjual</div>
-            <div class="stat-value">12.845</div>
+            <div class="stat-label">Menu Tersedia</div>
+            <div class="stat-value">{{ $totalMenuAktif }}</div>
           </div>
         </div>
         <div class="stat-card">
@@ -103,8 +103,8 @@
             <svg width="24" height="16" viewBox="0 0 24 16" fill="none"><path d="M12.5 7.95C12.9833 7.41667 13.3542 6.80833 13.6125 6.125C13.8708 5.44167 14 4.73333 14 4C14 3.26667 13.8708 2.55833 13.6125 1.875C13.3542 1.19167 12.9833 0.583333 12.5 0.05C13.5 0.183333 14.3333 0.625 15 1.375C15.6667 2.125 16 3 16 4C16 5 15.6667 5.875 15 6.625C14.3333 7.375 13.5 7.81667 12.5 7.95ZM18 16V13C18 12.4 17.8667 11.8292 17.6 11.2875C17.3333 10.7458 16.9833 10.2667 16.55 9.85C17.4 10.15 18.1875 10.5375 18.9125 11.0125C19.6375 11.4875 20 12.15 20 13V16H18ZM20 9V7H18V5H20V3H22V5H24V7H22V9H20ZM8 8C6.9 8 5.95833 7.60833 5.175 6.825C4.39167 6.04167 4 5.1 4 4C4 2.9 4.39167 1.95833 5.175 1.175C5.95833 0.391667 6.9 0 8 0C9.1 0 10.0417 0.391667 10.825 1.175C11.6083 1.95833 12 2.9 12 4C12 5.1 11.6083 6.04167 10.825 6.825C10.0417 7.60833 9.1 8 8 8ZM0 16V13.2C0 12.6333 0.145833 12.1125 0.4375 11.6375C0.729167 11.1625 1.11667 10.8 1.6 10.55C2.63333 10.0333 3.68333 9.64583 4.75 9.3875C5.81667 9.12917 6.9 9 8 9C9.1 9 10.1833 9.12917 11.25 9.3875C12.3167 9.64583 13.3667 10.0333 14.4 10.55C14.8833 10.8 15.2708 11.1625 15.5625 11.6375C15.8542 12.1125 16 12.6333 16 13.2V16H0Z" fill="#1D4ED8"/></svg>
           </div>
           <div>
-            <div class="stat-label">Pelanggan Baru</div>
-            <div class="stat-value">856</div>
+            <div class="stat-label">Total Meja</div>
+            <div class="stat-value">{{ $totalMeja }}</div>
           </div>
         </div>
       </div>
