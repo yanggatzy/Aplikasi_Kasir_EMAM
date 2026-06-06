@@ -163,7 +163,7 @@
               <option value="">Memuat meja...</option>
             </select>
           </div>
-          <div id="QrisStatusSection">
+          <div id="qrisStatusSection">
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:8px;">Set Status Meja</label>
             <div style="display:flex;gap:10px;">
               <button id="qrisBtnReservasi" onclick="pilihStatusMeja('dipesan',this,'qris')" style="flex:1;padding:10px 8px;border:1.5px solid #EAE1DC;border-radius:8px;background:#fff;font-family:inherit;font-size:13px;font-weight:600;color:#594238;cursor:pointer;transition:all 0.15s;">🔵 Reservasi</button>

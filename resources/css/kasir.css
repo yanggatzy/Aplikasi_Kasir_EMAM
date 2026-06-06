@@ -445,8 +445,26 @@ html, body {
 .pay-modal-inner::-webkit-scrollbar { display: none; }
 
 @media print {
-  body > *:not(#strutModal) { display: none !important; }
-  #strutModal { position: static !important; background: none !important; padding: 0 !important; }
-  .no-print { display: none !important; }
-  #strutContent { box-shadow: none !important; border-radius: 0 !important; }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #strutContent,
+  #strutContent * {
+    visibility: visible;
+  }
+
+  #strutContent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
 }
