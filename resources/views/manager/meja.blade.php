@@ -80,7 +80,17 @@
           </div>
           <div class="meja-name">{{ $meja->nama_meja }}</div>
           <div class="meja-card-bottom">
-            <div class="spacer"></div>
+
+    <label class="toggle-switch">
+        <input
+            type="checkbox"
+            {{ $meja->status === 'tersedia' ? 'checked' : '' }}
+            onchange="toggleMeja({{ $meja->id }}, this)">
+        <span class="toggle-track"></span>
+    </label>
+
+
+            
             <button class="btn-icon" onclick="openEditMeja({{ $meja->id }}, '{{ addslashes($meja->nama_meja) }}', {{ $meja->kapasitas }}, '{{ $meja->lokasi }}')" title="Edit" style="width:30px;height:30px;">
               <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M2 18H3.4L13.025 8.375L11.625 6.975L2 16.6V18ZM0 20V15.75L13.025 2.75C13.225 2.56667 13.4458 2.42083 13.6875 2.3125C13.9292 2.20417 14.1833 2.15 14.45 2.15C14.7167 2.15 14.975 2.20417 15.225 2.3125C15.475 2.42083 15.6917 2.58333 15.875 2.8L17.25 4.2C17.4667 4.38333 17.6292 4.6 17.7375 4.85C17.8458 5.1 17.9 5.35 17.9 5.6C17.9 5.86667 17.8458 6.12083 17.7375 6.3625C17.6292 6.60417 17.4667 6.825 17.25 7.025L4.25 20H0ZM12.325 7.675L11.625 6.975L13.025 8.375L12.325 7.675Z" fill="#594238"/></svg>
             </button>
