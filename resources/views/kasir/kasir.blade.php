@@ -133,13 +133,13 @@
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Nama Pelanggan</label>
             <input type="text" placeholder="Masukkan nama pelanggan" style="width:100%;padding:12px 14px;border:1.5px solid #EAE1DC;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;outline:none;" onfocus="this.style.borderColor='#D35400'" onblur="this.style.borderColor='#EAE1DC'">
           </div>
-          <div>
+          <div id="tunaiMejaSection">
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Pilih Meja</label>
             <select id="mejaSelect" style="width:100%;padding:12px 14px;border:1.5px solid #D35400;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;background:#fff;outline:none;">
               <option value="">Memuat meja...</option>
             </select>
           </div>
-          <div>
+          <div id="tunaiStatusSection">
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:8px;">Set Status Meja</label>
             <div style="display:flex;gap:10px;">
               <button id="btnReservasi" onclick="pilihStatusMeja('dipesan',this)" style="flex:1;padding:10px 8px;border:1.5px solid #EAE1DC;border-radius:8px;background:#fff;font-family:inherit;font-size:13px;font-weight:600;color:#594238;cursor:pointer;transition:all 0.15s;">
@@ -157,13 +157,13 @@
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Nama Pelanggan</label>
             <input id="qrisNama" type="text" placeholder="Masukkan nama pelanggan" style="width:100%;padding:12px 14px;border:1.5px solid #EAE1DC;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;outline:none;" onfocus="this.style.borderColor='#D35400'" onblur="this.style.borderColor='#EAE1DC'">
           </div>
-          <div>
+          <div id="qrisMejaSection">
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Pilih Meja</label>
             <select id="qrisMeja" style="width:100%;padding:12px 14px;border:1.5px solid #D35400;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;background:#fff;outline:none;">
               <option value="">Memuat meja...</option>
             </select>
           </div>
-          <div>
+          <div id="QrisStatusSection">
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:8px;">Set Status Meja</label>
             <div style="display:flex;gap:10px;">
               <button id="qrisBtnReservasi" onclick="pilihStatusMeja('dipesan',this,'qris')" style="flex:1;padding:10px 8px;border:1.5px solid #EAE1DC;border-radius:8px;background:#fff;font-family:inherit;font-size:13px;font-weight:600;color:#594238;cursor:pointer;transition:all 0.15s;">🔵 Reservasi</button>
@@ -204,13 +204,13 @@
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Nama Pelanggan</label>
             <input id="tfNama" type="text" placeholder="Masukkan nama pelanggan" style="width:100%;padding:12px 14px;border:1.5px solid #EAE1DC;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;outline:none;" onfocus="this.style.borderColor='#D35400'" onblur="this.style.borderColor='#EAE1DC'">
           </div>
-          <div>
+          <div id="tfMejaSection">
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:6px;">Pilih Meja</label>
             <select id="tfMeja" style="width:100%;padding:12px 14px;border:1.5px solid #D35400;border-radius:8px;font-family:inherit;font-size:14px;color:#4A3B32;background:#fff;outline:none;">
               <option value="">Memuat meja...</option>
             </select>
           </div>
-          <div>
+          <div id="tfStatusSection">
             <label style="font-size:13px;font-weight:500;color:#1C1C1C;display:block;margin-bottom:8px;">Set Status Meja</label>
             <div style="display:flex;gap:10px;">
               <button id="tfBtnReservasi" onclick="pilihStatusMeja('dipesan',this,'tf')" style="flex:1;padding:10px 8px;border:1.5px solid #EAE1DC;border-radius:8px;background:#fff;font-family:inherit;font-size:13px;font-weight:600;color:#594238;cursor:pointer;transition:all 0.15s;">🔵 Reservasi</button>

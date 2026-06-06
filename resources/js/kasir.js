@@ -145,14 +145,37 @@ document.getElementById('searchInput').addEventListener('input', e => {
 });
 
 document.getElementById('dineInBtn').addEventListener('click', () => {
-  document.getElementById('dineInBtn').classList.add('active');
-  document.getElementById('takeAwayBtn').classList.remove('active');
+    document.getElementById('dineInBtn').classList.add('active');
+    document.getElementById('takeAwayBtn').classList.remove('active');
+
+    toggleMejaSection(false);
 });
 
 document.getElementById('takeAwayBtn').addEventListener('click', () => {
-  document.getElementById('takeAwayBtn').classList.add('active');
-  document.getElementById('dineInBtn').classList.remove('active');
+    document.getElementById('takeAwayBtn').classList.add('active');
+    document.getElementById('dineInBtn').classList.remove('active');
+
+    toggleMejaSection(true);
 });
+
+
+function toggleMejaSection(isTakeAway) {
+    const sections = [
+        'tunaiMejaSection',
+        'tunaiStatusSection',
+        'qrisMejaSection',
+        'qrisStatusSection',
+        'tfMejaSection',
+        'tfStatusSection'
+    ];
+
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = isTakeAway ? 'none' : 'block';
+        }
+    });
+}
 
 /* ── PILIH STATUS MEJA ── */
 const mejaStatusPending = { id: null, action: null, nama: null };
