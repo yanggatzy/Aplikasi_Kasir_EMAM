@@ -170,7 +170,7 @@
             <div class="chart-y-axis">
               @php $step = $chartMax / 5; @endphp
               @for($i = 0; $i <= 5; $i++)
-              @php $val = (int)($step * (5 - $i)); @endphp
+              @php $val = (int)($step * $i); @endphp
               <span class="chart-y-label">{{ $val >= 1000000 ? number_format($val/1000000,1,',','.').'jt' : ($val >= 1000 ? number_format($val/1000,0,',','.').'rb' : $val) }}</span>
               @endfor
             </div>
