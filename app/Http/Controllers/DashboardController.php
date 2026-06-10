@@ -30,16 +30,17 @@ class DashboardController extends Controller
                                     ->distinct('nama_pelanggan')
                                     ->count('nama_pelanggan');
 
-        // ── CHART: jumlah transaksi per hari (7 hari terakhir) ──
+        // ── CHART: pendapatan per hari (7 hari terakhir) ──
         $hariSingkat = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
         $chartData = collect(range(6, 0))->map(function ($n) use ($today, $hariSingkat) {
             $date  = $today->copy()->subDays($n);
-            $count = Transaksi::whereDate('tanggal', $date)->count();
-            return ['label' => $hariSingkat[$date->dayOfWeek], 'value' => $count];
+            $total = (int) Transaksi::whereDate('tanggal', $date)->sum('total');
+            return ['label' => $hariSingkat[$date->dayOfWeek], 'value' => $total];
         })->values();
 
-        $chartMax  = max((int) $chartData->max('value'), 5);
-        $chartMax  = (int) ceil($chartMax / 5) * 5;
+        $maxVal   = (int) $chartData->max('value');
+        $step     = $maxVal > 500000 ? 100000 : ($maxVal > 100000 ? 50000 : 10000);
+        $chartMax = (int) ceil(max($maxVal, $step) / $step) * $step;
 
         // ── MENU TERLARIS (all-time, top 5) ──
         $menuTerlaris = DetailTransaksi::select('id_menu', DB::raw('SUM(jumlah) as total_terjual'))
