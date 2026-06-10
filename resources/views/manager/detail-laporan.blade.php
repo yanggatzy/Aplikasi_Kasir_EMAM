@@ -61,89 +61,76 @@
         Kembali ke Laporan
       </a>
 
+      @php
+        $bulanId = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        $judulTanggal = $date->day . ' ' . $bulanId[$date->month - 1] . ' ' . $date->year;
+      @endphp
+
       <div class="page-header" style="padding-top:16px;">
         <div class="page-header-left">
           <h1>Detail Laporan</h1>
+          <p>{{ $judulTanggal }}</p>
         </div>
       </div>
 
       <!-- Summary Card -->
       <div class="summary-card">
         <div>
-          <div class="summary-item-label">Order ID</div>
-          <div class="summary-item-value" style="color:var(--orange);">#TRX-98421</div>
+          <div class="summary-item-label">Total Transaksi</div>
+          <div class="summary-item-value" style="color:var(--orange);">{{ number_format($totalTransaksi, 0, ',', '.') }} Orders</div>
         </div>
         <div>
-          <div class="summary-item-label">Status Pembayaran</div>
-          <div class="summary-item-value">
-            <span class="badge badge-success">
-              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M5 8.5L2 5.5L2.75 4.75L5 7L9.25 2.75L10 3.5L5 8.5Z" fill="#166534"/></svg>
-              SUCCESS
-            </span>
-          </div>
+          <div class="summary-item-label">Total Pendapatan</div>
+          <div class="summary-item-value">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
         </div>
+        @foreach($perMetode as $metode => $data)
         <div>
-          <div class="summary-item-label">Waktu Transaksi</div>
-          <div class="summary-item-value" style="gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 14 15" fill="none"><path d="M1.5 15C1.0875 15 0.734375 14.8531 0.440625 14.5594C0.146875 14.2656 0 13.9125 0 13.5V3C0 2.5875 0.146875 2.23437 0.440625 1.94062C0.734375 1.64687 1.0875 1.5 1.5 1.5H2.25V0H3.75V1.5H9.75V0H11.25V1.5H12C12.4125 1.5 12.7656 1.64687 13.0594 1.94062C13.3531 2.23437 13.5 2.5875 13.5 3V13.5C13.5 13.9125 13.3531 14.2656 13.0594 14.5594C12.7656 14.8531 12.4125 15 12 15H1.5ZM1.5 13.5H12V6H1.5V13.5ZM1.5 4.5H12V3H1.5V4.5Z" fill="#594238"/></svg>
-            25 Oct 2023, 14:20
-          </div>
+          <div class="summary-item-label">{{ ucfirst($metode) }}</div>
+          <div class="summary-item-value">{{ $data['jumlah'] }} transaksi</div>
         </div>
-        <div>
-          <div class="summary-item-label">Kasir Bertugas</div>
-          <div class="summary-item-value">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0;">A</div>
-            Andi
-          </div>
-        </div>
+        @endforeach
       </div>
 
-      <!-- Items Section -->
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <p class="section-heading">Item Pesanan</p>
-        <span style="font-size:12px;font-weight:600;color:#8D7B72;">7 Items Total</span>
+      <!-- Transactions Table -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <p class="section-heading">Daftar Transaksi</p>
+        <span style="font-size:12px;font-weight:600;color:#8D7B72;">{{ $totalTransaksi }} Transaksi Total</span>
       </div>
-
-      @php
-      $items = [
-        ['Grilled Chicken Salad','Healthy Food','Rp45.000',2,'Rp90.000'],
-        ['Iced Caramel Latte','Minuman','Rp32.000',1,'Rp32.000'],
-        ['Fudgy Brownie','Dessert','Rp25.000',1,'Rp25.000'],
-        ['Ayam Bakar Madu','Makanan Utama','Rp42.000',1,'Rp42.000'],
-        ['Mie Ayam','Makanan Utama','Rp15.000',2,'Rp30.000'],
-        ['Es Teh Manis','Minuman','Rp6.000',3,'Rp18.000'],
-        ['Sate Ayam','Makanan Utama','Rp25.000',1,'Rp25.000'],
-      ];
-      @endphp
 
       <div class="table-card">
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>ITEM</th>
-                <th>HARGA</th>
-                <th>QTY</th>
-                <th>SUBTOTAL</th>
+                <th>NO</th>
+                <th>PELANGGAN</th>
+                <th>JAM</th>
+                <th>JENIS</th>
+                <th>MEJA</th>
+                <th>METODE</th>
+                <th>TOTAL</th>
               </tr>
             </thead>
             <tbody>
-              @foreach($items as $item)
+              @forelse($transaksis as $trx)
               <tr>
+                <td style="color:#8D7B72;">{{ $loop->iteration }}</td>
+                <td style="font-weight:600;">{{ $trx->nama_pelanggan }}</td>
+                <td>{{ \Carbon\Carbon::parse($trx->tanggal)->format('H:i') }}</td>
                 <td>
-                  <div style="display:flex;align-items:center;gap:12px;">
-                    <img src="{{ asset('images/mieayam.png') }}" alt="{{ $item[0] }}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;">
-                    <div>
-                      <div style="font-weight:700;">{{ $item[0] }}</div>
-                      <div style="font-size:11px;color:#8D7B72;">Kategori: {{ $item[1] }}</div>
-                    </div>
-                  </div>
+                  @if($trx->jenis_pesanan === 'takeaway')
+                  <span class="badge" style="background:#FEF3C7;color:#D97706;">Takeaway</span>
+                  @else
+                  <span class="badge badge-success">Dine-in</span>
+                  @endif
                 </td>
-                <td style="color:#594238;">{{ $item[2] }}</td>
-                <td style="color:#594238;">{{ $item[3] }}</td>
-                <td style="color:var(--orange);font-weight:700;">{{ $item[4] }}</td>
+                <td>{{ $trx->meja?->nama_meja ?? '-' }}</td>
+                <td style="text-transform:capitalize;">{{ $trx->metode_pembayaran }}</td>
+                <td style="font-weight:700;color:var(--orange);">Rp {{ number_format($trx->total, 0, ',', '.') }}</td>
               </tr>
-              @endforeach
+              @empty
+              <tr><td colspan="7" style="text-align:center;padding:32px;color:#8D7B72;">Tidak ada transaksi pada tanggal ini</td></tr>
+              @endforelse
             </tbody>
           </table>
         </div>
@@ -151,8 +138,8 @@
 
       <!-- Total Bar -->
       <div class="total-bar" style="margin-bottom:80px;">
-        <span class="total-bar-label">TOTAL AKHIR</span>
-        <span class="total-bar-value">Rp 262.000</span>
+        <span class="total-bar-label">TOTAL PENDAPATAN</span>
+        <span class="total-bar-value">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</span>
       </div>
     </div>
   </main>

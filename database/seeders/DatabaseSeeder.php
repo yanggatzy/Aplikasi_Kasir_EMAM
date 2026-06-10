@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\Meja;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Database\Seeders\TransaksiSeeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -92,5 +93,7 @@ class DatabaseSeeder extends Seeder
                 'status'    => 'tersedia',
             ]);
         }
+
+        $this->call(TransaksiSeeder::class);
     }
 }

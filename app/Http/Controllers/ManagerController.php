@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\Meja;
 use App\Models\User;
 use App\Models\Transaksi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -222,24 +223,43 @@ class ManagerController extends Controller
 
     public function indexLaporan()
     {
-        $totalPendapatan  = Transaksi::sum('total');
-        $totalTransaksi   = Transaksi::count();
-        $totalMenuAktif   = Menu::where('status', 'tersedia')->count();
-        $totalMeja        = Meja::count();
-        $pendapatanHariIni = Transaksi::whereDate('tanggal', today())->sum('total');
+        $totalPendapatan = Transaksi::sum('total');
+        $totalTransaksi  = Transaksi::count();
+        $totalMenuAktif  = Menu::where('status', 'tersedia')->count();
+        $totalMeja       = Meja::count();
 
-        $perMetode = Transaksi::selectRaw('metode_pembayaran, count(*) as jumlah, sum(total) as total_nominal')
-            ->groupBy('metode_pembayaran')
-            ->get();
-
-        $transaksiTerbaru = Transaksi::with(['meja', 'user'])
-            ->latest('tanggal')
-            ->take(10)
+        $laporanHarian = Transaksi::selectRaw('DATE(tanggal) as tanggal, COUNT(*) as jumlah_transaksi, SUM(total) as total_pendapatan')
+            ->groupByRaw('DATE(tanggal)')
+            ->orderByRaw('DATE(tanggal) DESC')
+            ->take(30)
             ->get();
 
         return view('manager.laporan', compact(
             'totalPendapatan', 'totalTransaksi', 'totalMenuAktif', 'totalMeja',
-            'pendapatanHariIni', 'perMetode', 'transaksiTerbaru'
+            'laporanHarian'
+        ));
+    }
+
+    public function detailLaporan(string $tanggal)
+    {
+        $date = Carbon::parse($tanggal)->startOfDay();
+
+        $transaksis = Transaksi::with(['meja', 'user'])
+            ->whereDate('tanggal', $date)
+            ->orderBy('tanggal')
+            ->get();
+
+        $totalPendapatan = $transaksis->sum('total');
+        $totalTransaksi  = $transaksis->count();
+
+        $perMetode = $transaksis->groupBy('metode_pembayaran')
+            ->map(fn($group) => [
+                'jumlah' => $group->count(),
+                'total'  => $group->sum('total'),
+            ]);
+
+        return view('manager.detail-laporan', compact(
+            'transaksis', 'totalPendapatan', 'totalTransaksi', 'date', 'perMetode'
         ));
     }
 }

@@ -6,6 +6,9 @@
   <title>Dashboard - Emam Kasir</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   @vite('resources/css/dashboard.css')
+  <script>
+    window.DASHBOARD = { chartData: {!! json_encode($chartData) !!}, chartMax: {{ $chartMax }} };
+  </script>
 </head>
 <body>
 <div class="app">
@@ -123,7 +126,7 @@
           <div></div>
           <div>
             <div class="stat-label">Total Penjualan Hari Ini</div>
-            <div class="stat-value">Rp 12.845.000</div>
+            <div class="stat-value">Rp {{ number_format($pendapatanHariIni, 0, ',', '.') }}</div>
           </div>
         </div>
 
@@ -136,7 +139,7 @@
           </div>
           <div>
             <div class="stat-label">Total Transaksi</div>
-            <div class="stat-value">142</div>
+            <div class="stat-value">{{ $totalTransaksiHariIni }}</div>
           </div>
         </div>
 
@@ -148,8 +151,8 @@
             </svg>
           </div>
           <div>
-            <div class="stat-label">Pelanggan Baru</div>
-            <div class="stat-value">38</div>
+            <div class="stat-label">Pelanggan Hari Ini</div>
+            <div class="stat-value">{{ $pelangganHariIni }}</div>
           </div>
         </div>
 
@@ -160,19 +163,15 @@
 
         <!-- Bar Chart -->
         <div class="chart-card">
-          <div class="card-title">Pendapatan Mingguan (Porsi)</div>
+          <div class="card-title">Transaksi 7 Hari Terakhir</div>
 
           <div class="chart-body">
             <!-- Y Axis -->
             <div class="chart-y-axis">
-              <span class="chart-y-label">0 Porsi</span>
-              <span class="chart-y-label">5 Porsi</span>
-              <span class="chart-y-label">10 Porsi</span>
-              <span class="chart-y-label">15 Porsi</span>
-              <span class="chart-y-label">20 Porsi</span>
-              <span class="chart-y-label">25 Porsi</span>
-              <span class="chart-y-label">30 Porsi</span>
-              <span class="chart-y-label">35 Porsi</span>
+              @php $step = $chartMax / 5; @endphp
+              @for($i = 0; $i <= 5; $i++)
+              <span class="chart-y-label">{{ (int)($step * (5 - $i)) }}</span>
+              @endfor
             </div>
 
             <div class="chart-plot">
@@ -194,41 +193,23 @@
           </div>
 
           <ul class="menu-list">
+            @forelse($menuTerlaris as $item)
             <li class="menu-item">
-              <div class="menu-thumb" style="background:#C8A882;"></div>
+              <div class="menu-thumb">
+                @if($item->menu->gambar)
+                  <img src="{{ asset('storage/' . $item->menu->gambar) }}" alt="{{ $item->menu->nama_menu }}">
+                @else
+                  <img src="{{ asset('images/mieayam.png') }}" alt="{{ $item->menu->nama_menu }}">
+                @endif
+              </div>
               <div class="menu-info">
-                <div class="menu-name">Nasi Goreng Spesial</div>
-                <div class="menu-sold">42 Porsi Terjual</div>
+                <div class="menu-name">{{ $item->menu->nama_menu }}</div>
+                <div class="menu-sold">{{ $item->total_terjual }} Porsi Terjual</div>
               </div>
             </li>
-            <li class="menu-item">
-              <div class="menu-thumb" style="background:#B08060;"></div>
-              <div class="menu-info">
-                <div class="menu-name">Ayam Bakar</div>
-                <div class="menu-sold">38 Porsi Terjual</div>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="menu-thumb" style="background:#E8B870;"></div>
-              <div class="menu-info">
-                <div class="menu-name">Es Jeruk</div>
-                <div class="menu-sold">29 Porsi Terjual</div>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="menu-thumb" style="background:#C8A060;"></div>
-              <div class="menu-info">
-                <div class="menu-name">Kentang Goreng</div>
-                <div class="menu-sold">25 Porsi Terjual</div>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="menu-thumb" style="background:#D4A870;"></div>
-              <div class="menu-info">
-                <div class="menu-name">Pisang Keju</div>
-                <div class="menu-sold">22 Porsi Terjual</div>
-              </div>
-            </li>
+            @empty
+            <li style="padding:16px;color:#8D7B72;font-size:13px;text-align:center;">Belum ada data penjualan</li>
+            @endforelse
           </ul>
         </div>
 

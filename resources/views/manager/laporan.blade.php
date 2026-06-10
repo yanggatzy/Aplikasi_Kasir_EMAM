@@ -122,49 +122,31 @@
               </tr>
             </thead>
             <tbody>
+              @php $bulanId = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; @endphp
+              @forelse($laporanHarian as $row)
+              @php $tgl = \Carbon\Carbon::parse($row->tanggal); $isToday = $tgl->isToday(); @endphp
               <tr>
                 <td>
-                  <div style="font-weight:700;">Hari ini, 25 Oct</div>
+                  <div style="font-weight:700;">@if($isToday)Hari ini, @endif{{ $tgl->day }} {{ $bulanId[$tgl->month - 1] }}</div>
+                  @if($isToday)
                   <div style="display:flex;align-items:center;gap:4px;margin-top:2px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block;"></span><span style="font-size:11px;color:var(--orange);font-weight:600;">IN SESSION</span></div>
+                  @else
+                  <div style="font-size:11px;color:#8D7B72;">{{ $tgl->day }} {{ $bulanId[$tgl->month - 1] }} {{ $tgl->year }}</div>
+                  @endif
                 </td>
-                <td>84 Orders</td>
-                <td style="font-weight:700;">Rp 9.840.000</td>
+                <td>{{ number_format($row->jumlah_transaksi, 0, ',', '.') }} Orders</td>
+                <td style="font-weight:700;">Rp {{ number_format($row->total_pendapatan, 0, ',', '.') }}</td>
                 <td><span class="badge badge-success"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="4" fill="#16A34A"/></svg>SUCCESS</span></td>
                 <td>
-                  <a href="{{ route('manager.detail-laporan') }}" class="btn-outline" style="text-decoration:none;">
+                  <a href="{{ route('manager.detail-laporan', ['tanggal' => $row->tanggal]) }}" class="btn-outline" style="text-decoration:none;">
                     <svg width="14" height="14" viewBox="0 0 22 16" fill="none"><path d="M11 12.5C12.25 12.5 13.3125 12.0625 14.1875 11.1875C15.0625 10.3125 15.5 9.25 15.5 8C15.5 6.75 15.0625 5.6875 14.1875 4.8125C13.3125 3.9375 12.25 3.5 11 3.5C9.75 3.5 8.6875 3.9375 7.8125 4.8125C6.9375 5.6875 6.5 6.75 6.5 8C6.5 9.25 6.9375 10.3125 7.8125 11.1875C8.6875 12.0625 9.75 12.5 11 12.5ZM11 10.7C10.25 10.7 9.6125 10.4375 9.0875 9.9125C8.5625 9.3875 8.3 8.75 8.3 8C8.3 7.25 8.5625 6.6125 9.0875 6.0875C9.6125 5.5625 10.25 5.3 11 5.3C11.75 5.3 12.3875 5.5625 12.9125 6.0875C13.4375 6.6125 13.7 7.25 13.7 8C13.7 8.75 13.4375 9.3875 12.9125 9.9125C12.3875 10.4375 11.75 10.7 11 10.7ZM11 14C8.56667 14 6.35 13.3208 4.35 11.9625C2.35 10.6042 0.933333 8.76667 0.1 6.45C0.933333 4.11667 2.35 2.27917 4.35 0.920833C6.35 -0.4375 8.56667 -1.1125 11 -1.1125C13.4333 -1.1125 15.65 -0.4375 17.65 0.920833C19.65 2.27917 21.0667 4.11667 21.9 6.45C21.0667 8.76667 19.65 10.6042 17.65 11.9625C15.65 13.3208 13.4333 14 11 14Z" fill="#594238"/></svg>
                     Detail
                   </a>
                 </td>
               </tr>
-              @php
-              $laporanRows = [
-                ['24 Oct 2023','Closed at 23:45',142,'Rp 18.450.000'],
-                ['23 Oct 2023','Closed at 23:50',138,'Rp 16.200.000'],
-                ['22 Oct 2023','Closed at 23:40',155,'Rp 20.100.000'],
-                ['21 Oct 2023','Closed at 23:45',121,'Rp 14.800.000'],
-                ['20 Oct 2023','Closed at 23:55',167,'Rp 22.450.000'],
-                ['19 Oct 2023','Closed at 23:45',145,'Rp 19.320.000'],
-                ['18 Oct 2023','Closed at 23:50',130,'Rp 15.780.000'],
-              ];
-              @endphp
-              @foreach($laporanRows as $row)
-              <tr>
-                <td>
-                  <div style="font-weight:700;">{{ $row[0] }}</div>
-                  <div style="font-size:11px;color:#8D7B72;">{{ $row[1] }}</div>
-                </td>
-                <td>{{ $row[2] }} Orders</td>
-                <td style="font-weight:700;">{{ $row[3] }}</td>
-                <td><span class="badge badge-success"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="4" fill="#16A34A"/></svg>SUCCESS</span></td>
-                <td>
-                  <a href="{{ route('manager.detail-laporan') }}" class="btn-outline" style="text-decoration:none;">
-                    <svg width="14" height="14" viewBox="0 0 22 16" fill="none"><path d="M11 12.5C12.25 12.5 13.3125 12.0625 14.1875 11.1875C15.0625 10.3125 15.5 9.25 15.5 8C15.5 6.75 15.0625 5.6875 14.1875 4.8125C13.3125 3.9375 12.25 3.5 11 3.5C9.75 3.5 8.6875 3.9375 7.8125 4.8125C6.9375 5.6875 6.5 6.75 6.5 8C6.5 9.25 6.9375 10.3125 7.8125 11.1875C8.6875 12.0625 9.75 12.5 11 12.5ZM11 10.7C10.25 10.7 9.6125 10.4375 9.0875 9.9125C8.5625 9.3875 8.3 8.75 8.3 8C8.3 7.25 8.5625 6.6125 9.0875 6.0875C9.6125 5.5625 10.25 5.3 11 5.3C11.75 5.3 12.3875 5.5625 12.9125 6.0875C13.4375 6.6125 13.7 7.25 13.7 8C13.7 8.75 13.4375 9.3875 12.9125 9.9125C12.3875 10.4375 11.75 10.7 11 10.7ZM11 14C8.56667 14 6.35 13.3208 4.35 11.9625C2.35 10.6042 0.933333 8.76667 0.1 6.45C0.933333 4.11667 2.35 2.27917 4.35 0.920833C6.35 -0.4375 8.56667 -1.1125 11 -1.1125C13.4333 -1.1125 15.65 -0.4375 17.65 0.920833C19.65 2.27917 21.0667 4.11667 21.9 6.45C21.0667 8.76667 19.65 10.6042 17.65 11.9625C15.65 13.3208 13.4333 14 11 14Z" fill="#594238"/></svg>
-                    Detail
-                  </a>
-                </td>
-              </tr>
-              @endforeach
+              @empty
+              <tr><td colspan="5" style="text-align:center;padding:32px;color:#8D7B72;">Belum ada data laporan</td></tr>
+              @endforelse
             </tbody>
           </table>
         </div>

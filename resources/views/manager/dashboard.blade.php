@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Emam Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.DASHBOARD = { chartData: {!! json_encode($chartData) !!}, chartMax: {{ $chartMax }} };
+  </script>
   @vite(['resources/css/manager.css', 'resources/js/manager-dashboard.js'])
 </head>
 <body>
@@ -142,7 +145,7 @@
           <div></div>
           <div>
             <div class="stat-label">Total Penjualan Hari Ini</div>
-            <div class="stat-value">Rp 12.845.000</div>
+            <div class="stat-value">Rp {{ number_format($pendapatanHariIni, 0, ',', '.') }}</div>
           </div>
         </div>
 
@@ -154,7 +157,7 @@
           </div>
           <div>
             <div class="stat-label">Total Transaksi</div>
-            <div class="stat-value">142</div>
+            <div class="stat-value">{{ $totalTransaksiHariIni }}</div>
           </div>
         </div>
 
@@ -165,8 +168,8 @@
             </svg>
           </div>
           <div>
-            <div class="stat-label">Pelanggan Baru</div>
-            <div class="stat-value">38</div>
+            <div class="stat-label">Pelanggan Hari Ini</div>
+            <div class="stat-value">{{ $pelangganHariIni }}</div>
           </div>
         </div>
       </div>
@@ -174,17 +177,13 @@
       <!-- Bottom Grid: Chart + Menu -->
       <div class="bottom-grid">
         <div class="chart-card">
-          <div class="card-title">Pendapatan Mingguan (Porsi)</div>
+          <div class="card-title">Transaksi 7 Hari Terakhir</div>
           <div class="chart-body">
             <div class="chart-y-axis">
-              <span class="chart-y-label">0 Porsi</span>
-              <span class="chart-y-label">5 Porsi</span>
-              <span class="chart-y-label">10 Porsi</span>
-              <span class="chart-y-label">15 Porsi</span>
-              <span class="chart-y-label">20 Porsi</span>
-              <span class="chart-y-label">25 Porsi</span>
-              <span class="chart-y-label">30 Porsi</span>
-              <span class="chart-y-label">35 Porsi</span>
+              @php $step = $chartMax / 5; @endphp
+              @for($i = 0; $i <= 5; $i++)
+              <span class="chart-y-label">{{ (int)($step * (5 - $i)) }}</span>
+              @endfor
             </div>
             <div class="chart-plot">
               <div class="chart-bars-area" id="chartBars" style="height:340px;"></div>
@@ -199,41 +198,23 @@
             <a href="{{ route('manager.menu') }}" class="lihat-link">Lihat Semua Menu</a>
           </div>
           <ul class="menu-list">
+            @forelse($menuTerlaris as $item)
             <li class="menu-item">
-              <div class="menu-thumb"><img src="{{ asset('images/mieayam.png') }}" alt="menu"></div>
+              <div class="menu-thumb">
+                @if($item->menu->gambar)
+                  <img src="{{ asset('storage/' . $item->menu->gambar) }}" alt="{{ $item->menu->nama_menu }}">
+                @else
+                  <img src="{{ asset('images/mieayam.png') }}" alt="{{ $item->menu->nama_menu }}">
+                @endif
+              </div>
               <div class="menu-info">
-                <div class="menu-name">Nasi Goreng Spesial</div>
-                <div class="menu-sold">42 Porsi Terjual</div>
+                <div class="menu-name">{{ $item->menu->nama_menu }}</div>
+                <div class="menu-sold">{{ $item->total_terjual }} Porsi Terjual</div>
               </div>
             </li>
-            <li class="menu-item">
-              <div class="menu-thumb"><img src="{{ asset('images/mieayam.png') }}" alt="menu"></div>
-              <div class="menu-info">
-                <div class="menu-name">Ayam Bakar Madu</div>
-                <div class="menu-sold">38 Porsi Terjual</div>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="menu-thumb"><img src="{{ asset('images/mieayam.png') }}" alt="menu"></div>
-              <div class="menu-info">
-                <div class="menu-name">Es Jeruk Peras</div>
-                <div class="menu-sold">29 Porsi Terjual</div>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="menu-thumb"><img src="{{ asset('images/mieayam.png') }}" alt="menu"></div>
-              <div class="menu-info">
-                <div class="menu-name">Kentang Goreng</div>
-                <div class="menu-sold">25 Porsi Terjual</div>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="menu-thumb"><img src="{{ asset('images/mieayam.png') }}" alt="menu"></div>
-              <div class="menu-info">
-                <div class="menu-name">Pisang Keju</div>
-                <div class="menu-sold">22 Porsi Terjual</div>
-              </div>
-            </li>
+            @empty
+            <li style="padding:16px;color:#8D7B72;font-size:13px;text-align:center;">Belum ada data penjualan</li>
+            @endforelse
           </ul>
         </div>
       </div>

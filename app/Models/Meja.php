@@ -11,9 +11,10 @@ class Meja extends Model
     // Kolom yang boleh diisi (Mass Assignment)
     protected $fillable = [
         'kode_meja',
+        'nama_meja',
         'kapasitas',
         'lokasi',
-        'status'
+        'status',
     ];
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\KasirController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\MejaController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\DashboardController;
 
 // ── PUBLIK: menu pelanggan (tanpa login) ──
 Route::get('/menu',          [PelangganController::class, 'index']);
@@ -16,11 +17,11 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:manager'])->group(function () {
 
     // ── MANAGER: halaman ──
-    Route::get('/manager/dashboard', fn() => view('manager.dashboard'))->name('manager.dashboard');
-    Route::get('/manager/laporan/detail', fn() => view('manager.detail-laporan'))->name('manager.detail-laporan');
+    Route::get('/manager/dashboard', [DashboardController::class, 'managerDashboard'])->name('manager.dashboard');
+    Route::get('/manager/laporan/detail/{tanggal}', [ManagerController::class, 'detailLaporan'])->name('manager.detail-laporan');
 
     // ── MANAGER: kategori ──
     Route::get('/manager/kategori',              [ManagerController::class, 'indexKategori'])->name('manager.kategori');
@@ -52,8 +53,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/manager/transaksi', [ManagerController::class, 'indexTransaksi'])->name('manager.transaksi');
     Route::get('/manager/laporan',   [ManagerController::class, 'indexLaporan'])->name('manager.laporan');
 
+});
+
+Route::middleware(['auth', 'role:kasir'])->group(function () {
+
     // ── KASIR: halaman ──
-    Route::get('/kasir/dashboard', fn() => view('kasir.dashboard'))->name('kasir.dashboard');
+    Route::get('/kasir/dashboard', [DashboardController::class, 'kasirDashboard'])->name('kasir.dashboard');
     Route::get('/kasir',           [KasirController::class, 'index']);
 
     // ── KASIR: API data ──
