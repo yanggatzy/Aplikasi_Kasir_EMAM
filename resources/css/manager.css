@@ -442,11 +442,11 @@ html, body {
 }
 
 .chart-bar-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  flex:1;
+  height:100%;
 }
 
 .chart-bar {

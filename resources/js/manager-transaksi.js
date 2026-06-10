@@ -43,3 +43,12 @@ if (searchInput) {
 
 window.openModal  = openModal;
 window.closeModal = closeModal;
+
+
+const pdfBtn = document.querySelector('.btn-float');
+
+if (pdfBtn) {
+  pdfBtn.addEventListener('click', () => {
+    window.print();
+  });
+}

@@ -11,6 +11,19 @@ const chartData = [
   { label: 'Sel', value: 29 },
   { label: 'Rab', value: 34 },
   { label: 'Kam', value: 29 },
+  { label: 'Jum', value: 24 },
+  { label: 'Sab', value: 35 },
+  { label: 'Min', value: 31 },
+];
+
+const expenseData = [
+  { label:'Sen', value:8 },
+  { label:'Sel', value:12 },
+  { label:'Rab', value:10 },
+  { label:'Kam', value:15 },
+  { label:'Jum', value:9 },
+  { label:'Sab', value:18 },
+  { label:'Min', value:13 }
 ];
 
 const MAX_VALUE = 35;

@@ -187,7 +187,7 @@
               <span class="chart-y-label">35 Porsi</span>
             </div>
             <div class="chart-plot">
-              <div class="chart-bars-area" id="chartBars" style="height:280px;"></div>
+              <div class="chart-bars-area" id="chartBars" style="height:340px;"></div>
               <div class="chart-x-labels" id="chartLabels"></div>
             </div>
           </div>
