@@ -20,8 +20,7 @@ if (barsEl && labelsEl) {
 
     const col = document.createElement('div');
     col.className = 'chart-bar-col';
-    const rupiah = 'Rp ' + d.value.toLocaleString('id-ID');
-    col.innerHTML = `<div class="chart-bar" style="height:${heightPx}px" title="${d.label}: ${rupiah}"></div>`;
+    col.innerHTML = `<div class="chart-bar" style="height:${heightPx}px" title="${d.label}: ${d.value} porsi"></div>`;
     barsEl.appendChild(col);
 
     const lbl = document.createElement('div');

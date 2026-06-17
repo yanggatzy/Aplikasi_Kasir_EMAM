@@ -30,16 +30,17 @@ class DashboardController extends Controller
                                     ->distinct('nama_pelanggan')
                                     ->count('nama_pelanggan');
 
-        // ── CHART: pendapatan per hari (7 hari terakhir) ──
-        $hariSingkat = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-        $chartData = collect(range(6, 0))->map(function ($n) use ($today, $hariSingkat) {
-            $date  = $today->copy()->subDays($n);
-            $total = (int) Transaksi::whereDate('tanggal', $date)->sum('total');
-            return ['label' => $hariSingkat[$date->dayOfWeek], 'value' => $total];
+        // ── CHART: porsi terjual per hari (minggu ini Sen–Min) ──
+        $hariSingkat = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+        $monday = $today->copy()->startOfWeek(Carbon::MONDAY);
+        $chartData = collect(range(0, 6))->map(function ($n) use ($today, $monday, $hariSingkat) {
+            $date  = $monday->copy()->addDays($n);
+            $total = $date->gt($today) ? 0 : (int) DetailTransaksi::whereHas('transaksi', fn($q) => $q->whereDate('tanggal', $date))->sum('jumlah');
+            return ['label' => $hariSingkat[$n], 'value' => $total];
         })->values();
 
         $maxVal   = (int) $chartData->max('value');
-        $step     = $maxVal > 500000 ? 100000 : ($maxVal > 100000 ? 50000 : 10000);
+        $step     = $maxVal > 100 ? 50 : ($maxVal > 20 ? 10 : 5);
         $chartMax = (int) ceil(max($maxVal, $step) / $step) * $step;
 
         // ── MENU TERLARIS (all-time, top 5) ──

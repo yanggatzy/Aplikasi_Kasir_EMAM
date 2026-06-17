@@ -38,10 +38,11 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::patch('/manager/menu/{menu}/toggle', [ManagerController::class, 'toggleMenu']);
 
     // ── MANAGER: meja ──
-    Route::get('/manager/meja',          [ManagerController::class, 'indexMeja'])->name('manager.meja');
-    Route::post('/manager/meja',         [ManagerController::class, 'storeMeja']);
-    Route::put('/manager/meja/{meja}',   [ManagerController::class, 'updateMeja']);
-    Route::delete('/manager/meja/{meja}',[ManagerController::class, 'destroyMeja']);
+    Route::get('/manager/meja',                 [ManagerController::class, 'indexMeja'])->name('manager.meja');
+    Route::post('/manager/meja',                [ManagerController::class, 'storeMeja']);
+    Route::put('/manager/meja/{meja}',          [ManagerController::class, 'updateMeja']);
+    Route::delete('/manager/meja/{meja}',       [ManagerController::class, 'destroyMeja']);
+    Route::patch('/manager/meja/{meja}/toggle', [ManagerController::class, 'toggleMeja']);
 
     // ── MANAGER: user ──
     Route::get('/manager/user',          [ManagerController::class, 'indexUser'])->name('manager.user');

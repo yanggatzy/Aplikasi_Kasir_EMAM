@@ -84,7 +84,7 @@
     <label class="toggle-switch">
         <input
             type="checkbox"
-            {{ $meja->status === 'tersedia' ? 'checked' : '' }}
+            {{ $meja->status !== 'nonaktif' ? 'checked' : '' }}
             onchange="toggleMeja({{ $meja->id }}, this)">
         <span class="toggle-track"></span>
     </label>

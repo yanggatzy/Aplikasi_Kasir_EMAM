@@ -83,6 +83,18 @@ async function submitEditMeja() {
   else alert('Gagal menyimpan perubahan');
 }
 
+async function toggleMeja(id, checkbox) {
+  const res = await fetch(`/manager/meja/${id}/toggle`, {
+    method: 'PATCH',
+    headers: { 'X-CSRF-TOKEN': CSRF },
+  });
+  const data = await res.json();
+  if (!data.success) {
+    checkbox.checked = !checkbox.checked;
+    alert('Gagal mengubah status meja');
+  }
+}
+
 async function submitHapusMeja() {
   const id = document.getElementById('hapusIdMeja').value;
   const res = await fetch(`/manager/meja/${id}`, {
@@ -101,3 +113,4 @@ window.openHapusMeja    = openHapusMeja;
 window.submitTambahMeja = submitTambahMeja;
 window.submitEditMeja   = submitEditMeja;
 window.submitHapusMeja  = submitHapusMeja;
+window.toggleMeja       = toggleMeja;

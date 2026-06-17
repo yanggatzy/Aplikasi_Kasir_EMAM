@@ -163,7 +163,7 @@
 
         <!-- Bar Chart -->
         <div class="chart-card">
-          <div class="card-title">Transaksi 7 Hari Terakhir</div>
+          <div class="card-title">Porsi Terjual Mingguan</div>
 
           <div class="chart-body">
             <!-- Y Axis -->
@@ -171,7 +171,7 @@
               @php $step = $chartMax / 5; @endphp
               @for($i = 0; $i <= 5; $i++)
               @php $val = (int)($step * $i); @endphp
-              <span class="chart-y-label">{{ $val >= 1000000 ? number_format($val/1000000,1,',','.').'jt' : ($val >= 1000 ? number_format($val/1000,0,',','.').'rb' : $val) }}</span>
+              <span class="chart-y-label">{{ $val }}</span>
               @endfor
             </div>
 
@@ -190,7 +190,6 @@
         <div class="menu-card">
           <div class="menu-card-header">
             <div class="card-title">Menu Terlaris</div>
-            <a href="#" class="lihat-link">Lihat Semua Menu</a>
           </div>
 
           <ul class="menu-list">

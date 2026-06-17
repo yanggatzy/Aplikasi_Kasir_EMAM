@@ -156,6 +156,13 @@ class ManagerController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function toggleMeja(Meja $meja)
+    {
+        $newStatus = $meja->status === 'nonaktif' ? 'tersedia' : 'nonaktif';
+        $meja->update(['status' => $newStatus]);
+        return response()->json(['success' => true, 'status' => $newStatus]);
+    }
+
     // ══════════════════════════════════════════
     //  USER
     // ══════════════════════════════════════════
