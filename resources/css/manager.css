@@ -190,6 +190,14 @@ html, body {
   flex: 1;
 }
 
+.topbar-date-only {
+  justify-content: flex-end;
+}
+
+.topbar-date-only .search-wrap {
+  display: none;
+}
+
 .search-icon {
   position: absolute;
   left: 14px;

@@ -96,6 +96,9 @@ html, body {
 
 .search-wrap { position: relative; flex: 1; max-width: 448px; }
 
+.topbar-date-only { justify-content: flex-end; }
+.topbar-date-only .search-wrap { display: none; }
+
 .search-icon {
   position: absolute; left: 14px; top: 50%;
   transform: translateY(-50%); pointer-events: none;

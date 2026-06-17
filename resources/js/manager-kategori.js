@@ -41,6 +41,17 @@ document.addEventListener('keydown', function(e) {
 
 /* ── CRUD Kategori ── */
 
+const searchInput = document.querySelector('.search-input');
+if (searchInput) {
+  const rows = Array.from(document.querySelectorAll('tbody tr'));
+  searchInput.addEventListener('input', function() {
+    const query = this.value.trim().toLowerCase();
+    rows.forEach(row => {
+      row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query);
+    });
+  });
+}
+
 function openEditKategori(id, nama, deskripsi) {
   document.getElementById('editIdKategori').value = id;
   document.getElementById('editNamaKategori').value = nama;

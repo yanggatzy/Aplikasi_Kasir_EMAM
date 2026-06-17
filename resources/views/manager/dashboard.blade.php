@@ -111,7 +111,7 @@
   <main class="main">
 
     <!-- Top Bar -->
-    <div class="topbar">
+    <div class="topbar topbar-date-only">
       <div class="search-wrap">
         <div class="search-icon">
           <svg width="16" height="16" viewBox="0 0 18 24" fill="none">

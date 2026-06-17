@@ -32,17 +32,34 @@ document.addEventListener('keydown', function(e) {
 });
 
 /* ── Category filter ── */
+let activeCategory = 'all';
+let searchQuery = '';
+
+function applyMenuFilters() {
+  document.querySelectorAll('tbody tr[data-cat]').forEach(row => {
+    const matchesCategory = activeCategory === 'all' || row.dataset.cat === activeCategory;
+    const matchesSearch = searchQuery === '' || row.textContent.toLowerCase().includes(searchQuery);
+    row.hidden = !(matchesCategory && matchesSearch);
+  });
+}
+
 const pills = document.querySelectorAll('#categoryPills .pill');
 pills.forEach(pill => {
   pill.addEventListener('click', function() {
     pills.forEach(p => p.classList.remove('active'));
     this.classList.add('active');
-    const cat = this.dataset.cat;
-    document.querySelectorAll('tbody tr[data-cat]').forEach(row => {
-      row.style.display = (cat === 'all' || row.dataset.cat === cat) ? '' : 'none';
-    });
+    activeCategory = this.dataset.cat;
+    applyMenuFilters();
   });
 });
+
+const searchInput = document.querySelector('.search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    searchQuery = this.value.trim().toLowerCase();
+    applyMenuFilters();
+  });
+}
 
 /* ── Toggle handler ── */
 function handleToggle(checkbox) {

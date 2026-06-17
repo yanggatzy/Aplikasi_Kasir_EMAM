@@ -33,6 +33,17 @@ document.addEventListener('keydown', function(e) {
 
 /* ── CRUD User ── */
 
+const searchInput = document.querySelector('.search-input');
+if (searchInput) {
+  const rows = Array.from(document.querySelectorAll('tbody tr'));
+  searchInput.addEventListener('input', function() {
+    const query = this.value.trim().toLowerCase();
+    rows.forEach(row => {
+      row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query);
+    });
+  });
+}
+
 function openEditUser(id, username) {
   document.getElementById('editIdUser').value = id;
   document.getElementById('editUsernameUser').value = username;

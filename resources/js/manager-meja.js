@@ -33,6 +33,17 @@ document.addEventListener('keydown', function(e) {
 
 /* ── CRUD Meja ── */
 
+const searchInput = document.querySelector('.search-input');
+if (searchInput) {
+  const cards = Array.from(document.querySelectorAll('.meja-card'));
+  searchInput.addEventListener('input', function() {
+    const query = this.value.trim().toLowerCase();
+    cards.forEach(card => {
+      card.hidden = query !== '' && !card.textContent.toLowerCase().includes(query);
+    });
+  });
+}
+
 function openEditMeja(id, nama, kapasitas, lokasi) {
   document.getElementById('editIdMeja').value = id;
   document.getElementById('editNamaMeja').value = nama;

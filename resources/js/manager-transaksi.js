@@ -32,11 +32,11 @@ document.addEventListener('keydown', function(e) {
 /* ── Search filter ── */
 const searchInput = document.querySelector('.search-input');
 if (searchInput) {
+  const rows = Array.from(document.querySelectorAll('tbody tr'));
   searchInput.addEventListener('input', function() {
-    const query = this.value.toLowerCase();
-    document.querySelectorAll('tbody tr').forEach(row => {
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(query) ? '' : 'none';
+    const query = this.value.trim().toLowerCase();
+    rows.forEach(row => {
+      row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query);
     });
   });
 }
