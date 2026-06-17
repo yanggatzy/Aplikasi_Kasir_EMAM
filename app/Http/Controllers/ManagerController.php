@@ -216,34 +216,73 @@ class ManagerController extends Controller
     //  TRANSAKSI (view only)
     // ══════════════════════════════════════════
 
-    public function indexTransaksi()
+    public function indexTransaksi(Request $request)
     {
-        $transaksis = Transaksi::with(['meja', 'user'])
-            ->latest('tanggal')
+        $filters = $request->validate([
+            'tanggal_mulai'   => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date',
+            'metode'          => 'nullable|in:tunai,cash,qris,transfer',
+        ]);
+
+        $query = Transaksi::with(['meja', 'user']);
+
+        if (!empty($filters['tanggal_mulai']) && !empty($filters['tanggal_selesai'])) {
+            $startDate = Carbon::parse($filters['tanggal_mulai']);
+            $endDate = Carbon::parse($filters['tanggal_selesai']);
+
+            if ($startDate->gt($endDate)) {
+                [$startDate, $endDate] = [$endDate, $startDate];
+            }
+
+            $query->whereBetween('tanggal', [
+                $startDate->startOfDay(),
+                $endDate->endOfDay(),
+            ]);
+        } elseif (!empty($filters['tanggal_mulai'])) {
+            $query->whereDate('tanggal', $filters['tanggal_mulai']);
+        } elseif (!empty($filters['tanggal_selesai'])) {
+            $query->whereDate('tanggal', $filters['tanggal_selesai']);
+        }
+
+        if (!empty($filters['metode'])) {
+            $query->where('metode_pembayaran', $filters['metode']);
+        }
+
+        $transaksis = $query->latest('tanggal')
             ->get();
-        return view('manager.transaksi', compact('transaksis'));
+
+        return view('manager.transaksi', compact('transaksis', 'filters'));
     }
 
     // ══════════════════════════════════════════
     //  LAPORAN
     // ══════════════════════════════════════════
 
-    public function indexLaporan()
+    public function indexLaporan(Request $request)
     {
-        $totalPendapatan = Transaksi::sum('total');
-        $totalTransaksi  = Transaksi::count();
+        $filters = $request->validate([
+            'bulan' => 'nullable|date_format:Y-m',
+        ]);
+
+        $selectedMonth = Carbon::createFromFormat('Y-m', $filters['bulan'] ?? now()->format('Y-m'));
+        $startOfMonth = $selectedMonth->copy()->startOfMonth();
+        $endOfMonth = $selectedMonth->copy()->endOfMonth();
+        $transaksiBulanan = Transaksi::whereBetween('tanggal', [$startOfMonth, $endOfMonth]);
+
+        $totalPendapatan = (clone $transaksiBulanan)->sum('total');
+        $totalTransaksi  = (clone $transaksiBulanan)->count();
         $totalMenuAktif  = Menu::where('status', 'tersedia')->count();
         $totalMeja       = Meja::count();
 
         $laporanHarian = Transaksi::selectRaw('DATE(tanggal) as tanggal, COUNT(*) as jumlah_transaksi, SUM(total) as total_pendapatan')
+            ->whereBetween('tanggal', [$startOfMonth, $endOfMonth])
             ->groupByRaw('DATE(tanggal)')
             ->orderByRaw('DATE(tanggal) DESC')
-            ->take(30)
             ->get();
 
         return view('manager.laporan', compact(
             'totalPendapatan', 'totalTransaksi', 'totalMenuAktif', 'totalMeja',
-            'laporanHarian'
+            'laporanHarian', 'filters'
         ));
     }
 

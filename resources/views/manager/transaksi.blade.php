@@ -64,22 +64,17 @@
       </div>
 
       <!-- Filters -->
-      <div class="filters-row">
-        <select class="filter-select">
-          <option>Mei 2024</option>
-          <option>April 2024</option>
-          <option>Maret 2024</option>
-          <option>Februari 2024</option>
-          <option>Januari 2024</option>
+      <form class="filters-row" method="GET" action="{{ route('manager.transaksi') }}">
+        <input class="filter-select" type="date" name="tanggal_mulai" value="{{ $filters['tanggal_mulai'] ?? '' }}" aria-label="Tanggal mulai">
+        <input class="filter-select" type="date" name="tanggal_selesai" value="{{ $filters['tanggal_selesai'] ?? '' }}" aria-label="Tanggal selesai">
+        <select class="filter-select" name="metode">
+          <option value="">Semua Metode</option>
+          <option value="tunai" @selected(($filters['metode'] ?? '') === 'tunai')>Tunai</option>
+          <option value="qris" @selected(($filters['metode'] ?? '') === 'qris')>QRIS</option>
+          <option value="transfer" @selected(($filters['metode'] ?? '') === 'transfer')>Transfer</option>
         </select>
-        <select class="filter-select">
-          <option>Semua Metode</option>
-          <option>Cash</option>
-          <option>QRIS</option>
-          <option>Transfer</option>
-        </select>
-        <button class="btn-primary" style="padding:9px 20px;">Filter</button>
-      </div>
+        <button type="submit" class="btn-primary" style="padding:9px 20px;">Filter</button>
+      </form>
 
       <div class="table-card">
         <div class="table-wrap">
@@ -111,8 +106,8 @@
                   <div style="font-weight:700;">{{ number_format($trx->total, 0, ',', '.') }}</div>
                 </td>
                 <td>
-                  @if($trx->metode_pembayaran === 'cash')
-                    <span class="badge badge-cash">Cash</span>
+                  @if(in_array($trx->metode_pembayaran, ['tunai', 'cash'], true))
+                    <span class="badge badge-cash">Tunai</span>
                   @elseif($trx->metode_pembayaran === 'qris')
                     <span class="badge badge-qris">QRIS</span>
                   @else

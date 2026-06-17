@@ -60,13 +60,10 @@
           <h1>Laporan Penjualan</h1>
           <p>Pantau performa penjualan dan pendapatan harian outlet Anda.</p>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:var(--text-mid);">
-            <svg width="14" height="15" viewBox="0 0 14 15" fill="none"><path d="M1.5 15C1.0875 15 0.734375 14.8531 0.440625 14.5594C0.146875 14.2656 0 13.9125 0 13.5V3C0 2.5875 0.146875 2.23437 0.440625 1.94062C0.734375 1.64687 1.0875 1.5 1.5 1.5H2.25V0H3.75V1.5H9.75V0H11.25V1.5H12C12.4125 1.5 12.7656 1.64687 13.0594 1.94062C13.3531 2.23437 13.5 2.5875 13.5 3V13.5C13.5 13.9125 13.3531 14.2656 13.0594 14.5594C12.7656 14.8531 12.4125 15 12 15H1.5ZM1.5 13.5H12V6H1.5V13.5ZM1.5 4.5H12V3H1.5V4.5Z" fill="#594238"/></svg>
-            Mei 2024
-          </div>
-          <button class="btn-primary" style="padding:9px 20px;">Filter</button>
-        </div>
+        <form method="GET" action="{{ route('manager.laporan') }}" style="display:flex;align-items:center;gap:10px;">
+          <input class="filter-select" type="month" name="bulan" value="{{ $filters['bulan'] ?? now()->format('Y-m') }}" aria-label="Bulan laporan">
+          <button type="submit" class="btn-primary" style="padding:9px 20px;">Filter</button>
+        </form>
       </div>
 
       <!-- Stat Cards -->

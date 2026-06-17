@@ -28,12 +28,3 @@ document.addEventListener('keydown', function(e) {
     document.querySelectorAll('.modal-overlay:not(.hidden)').forEach(m => m.classList.add('hidden'));
   }
 });
-
-/* ── Filter button ── */
-const filterBtn = document.querySelector('.btn-primary');
-if (filterBtn) {
-  filterBtn.addEventListener('click', function() {
-    // In a real app this would filter the data
-    console.log('Filter applied');
-  });
-}
