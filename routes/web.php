@@ -10,8 +10,6 @@ use App\Http\Controllers\DashboardController;
 
 // ── PUBLIK: menu pelanggan (tanpa login) ──
 Route::get('/menu',          [PelangganController::class, 'index']);
-Route::get('/menu/data',     [PelangganController::class, 'getMenus']);
-Route::get('/menu/terlaris', [PelangganController::class, 'getTerlaris']);
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -38,10 +36,10 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::patch('/manager/menu/{menu}/toggle', [ManagerController::class, 'toggleMenu']);
 
     // ── MANAGER: meja ──
-    Route::get('/manager/meja',                 [ManagerController::class, 'indexMeja'])->name('manager.meja');
-    Route::post('/manager/meja',                [ManagerController::class, 'storeMeja']);
-    Route::put('/manager/meja/{meja}',          [ManagerController::class, 'updateMeja']);
-    Route::delete('/manager/meja/{meja}',       [ManagerController::class, 'destroyMeja']);
+    Route::get('/manager/meja',          [ManagerController::class, 'indexMeja'])->name('manager.meja');
+    Route::post('/manager/meja',         [ManagerController::class, 'storeMeja']);
+    Route::put('/manager/meja/{meja}',   [ManagerController::class, 'updateMeja']);
+    Route::delete('/manager/meja/{meja}',[ManagerController::class, 'destroyMeja']);
     Route::patch('/manager/meja/{meja}/toggle', [ManagerController::class, 'toggleMeja']);
 
     // ── MANAGER: user ──

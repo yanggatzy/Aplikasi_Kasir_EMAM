@@ -35,7 +35,8 @@ class DashboardController extends Controller
         $monday = $today->copy()->startOfWeek(Carbon::MONDAY);
         $chartData = collect(range(0, 6))->map(function ($n) use ($today, $monday, $hariSingkat) {
             $date  = $monday->copy()->addDays($n);
-            $total = $date->gt($today) ? 0 : (int) DetailTransaksi::whereHas('transaksi', fn($q) => $q->whereDate('tanggal', $date))->sum('jumlah');
+            $total = $date->gt($today) ? 0
+                : (int) DetailTransaksi::whereHas('transaksi', fn($q) => $q->whereDate('tanggal', $date))->sum('jumlah');
             return ['label' => $hariSingkat[$n], 'value' => $total];
         })->values();
 

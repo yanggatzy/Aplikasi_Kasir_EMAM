@@ -21,6 +21,7 @@ class KasirController extends Controller
     {
         $menus = Menu::with('kategori')
             ->where('status', 'tersedia')
+            ->whereHas('kategori', fn($q) => $q->where('status', 'aktif'))
             ->get()
             ->map(fn($m) => [
                 'id'        => $m->id,
@@ -36,6 +37,7 @@ class KasirController extends Controller
     public function getMejas()
     {
         $mejas = Meja::where('status', 'tersedia')
+            ->where('aktif', true)
             ->get()
             ->map(fn($m) => [
                 'id'   => $m->id,

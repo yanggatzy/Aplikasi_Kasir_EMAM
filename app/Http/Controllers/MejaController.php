@@ -14,7 +14,7 @@ class MejaController extends Controller
 
     public function getAll()
     {
-        $mejas = Meja::where('status', '!=', 'nonaktif')->get()->map(fn($m) => [
+        $mejas = Meja::where('aktif', true)->get()->map(fn($m) => [
             'id'     => $m->id,
             'kode'   => $m->kode_meja,
             'nama'   => $m->nama_meja,

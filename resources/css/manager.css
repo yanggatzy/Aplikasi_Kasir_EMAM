@@ -1102,6 +1102,22 @@ tbody tr:last-child td { border-bottom: none; }
 
 .btn-modal-submit:hover { opacity: 0.88; }
 
+.btn-struk {
+  padding: 5px 12px;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.btn-struk:hover { opacity: 0.85; }
+
 /* Hapus modal pill buttons */
 .modal-btn-stack {
   display: flex;
@@ -1192,6 +1208,28 @@ tbody tr:last-child td { border-bottom: none; }
   font-weight: 600;
   color: var(--text-dark);
 }
+
+/* ── Struk Modern ── */
+.sm-header      { text-align: center; padding: 24px 24px 16px; }
+.sm-logo        { width: 60px; height: auto; margin-bottom: 8px; }
+.sm-title       { font-size: 20px; font-weight: 700; color: #D35400; }
+.sm-subtitle    { font-size: 12px; color: #8D7B72; margin-top: 2px; }
+.sm-line        { border: none; border-top: 1px solid #EAE1DC; margin: 0; }
+.sm-info        { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 0; padding: 16px 24px; }
+.sm-label       { font-size: 11px; color: #8D7B72; }
+.sm-value       { font-size: 13px; font-weight: 600; color: #1C1C1C; margin-top: 2px; }
+.sm-items       { padding: 16px 24px; display: flex; flex-direction: column; gap: 14px; }
+.sm-item-top    { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.sm-item-name   { font-size: 14px; font-weight: 600; color: #1C1C1C; }
+.sm-item-price  { font-size: 14px; font-weight: 600; color: #1C1C1C; white-space: nowrap; }
+.sm-item-qty    { font-size: 12px; color: #8D7B72; margin-top: 2px; }
+.sm-summary     { background: #FDF1EA; border-radius: 10px; padding: 14px 16px; margin: 0 24px 16px; display: flex; flex-direction: column; gap: 6px; }
+.sm-sum-row     { display: flex; justify-content: space-between; font-size: 13px; color: #594238; }
+.sm-total-row   { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: #1C1C1C; margin-top: 6px; padding-top: 10px; border-top: 1px solid #F0DDD3; }
+.sm-total-row span:last-child { color: #D35400; font-size: 16px; }
+.sm-success     { display: flex; justify-content: center; padding: 12px 24px; }
+.sm-success-badge { display: inline-flex; align-items: center; gap: 8px; border: 2px solid #16A34A; border-radius: 9999px; padding: 8px 28px; color: #16A34A; font-size: 13px; font-weight: 600; }
+.sm-footer-text { text-align: center; font-size: 12px; color: #8D7B72; padding: 12px 24px 20px; }
 
 /* Struk / Receipt modal */
 .struk-modal-card {
@@ -1452,5 +1490,28 @@ tbody tr:last-child td { border-bottom: none; }
 
   .page-header h1::after {
     content: " - Rekap Transaksi";
+  }
+
+  /* Saat cetak struk: sembunyikan semua kecuali strutContent */
+  body.printing-struk * {
+    visibility: hidden;
+  }
+
+  body.printing-struk #strutContent,
+  body.printing-struk #strutContent * {
+    visibility: visible;
+  }
+
+  body.printing-struk #strutContent {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 360px;
+    box-shadow: none !important;
+  }
+
+  body.printing-struk .no-print {
+    display: none !important;
   }
 }

@@ -87,10 +87,27 @@
                 <th>TOTAL BAYAR</th>
                 <th>METODE</th>
                 <th>STATUS</th>
+                <th>AKSI</th>
               </tr>
             </thead>
             <tbody>
               @forelse($transaksis as $trx)
+              @php
+                $struk = [
+                  'id'        => $trx->id,
+                  'tgl'       => \Carbon\Carbon::parse($trx->tanggal)->format('d M Y, H:i'),
+                  'kasir'     => $trx->user?->username ?? '-',
+                  'pelanggan' => $trx->nama_pelanggan ?? '-',
+                  'meja'      => $trx->meja?->nama_meja ?? 'Take Away',
+                  'total'     => $trx->total,
+                  'items'     => $trx->detailTransaksis->map(fn($d) => [
+                    'nama'    => $d->menu?->nama_menu ?? '-',
+                    'harga'   => $d->menu?->harga ?? 0,
+                    'jumlah'  => $d->jumlah,
+                    'subtotal'=> $d->subtotal,
+                  ])->values()->toArray(),
+                ];
+              @endphp
               <tr>
                 <td style="color:var(--orange);font-weight:700;">#TRX-{{ str_pad($trx->id, 6, '0', STR_PAD_LEFT) }}</td>
                 <td>
@@ -120,10 +137,13 @@
                     SUCCESS
                   </span>
                 </td>
+                <td>
+                  <button class="btn-struk" onclick="lihatStruk(this)" data-struk='@json($struk)'>Lihat Struk</button>
+                </td>
               </tr>
               @empty
               <tr>
-                <td colspan="6" style="text-align:center;color:#8D7B72;padding:2rem;">Belum ada transaksi</td>
+                <td colspan="7" style="text-align:center;color:#8D7B72;padding:2rem;">Belum ada transaksi</td>
               </tr>
               @endforelse
             </tbody>
@@ -142,36 +162,45 @@
 
 <!-- Struk Modal -->
 <div id="strutModal" class="modal-overlay hidden">
-  <div class="struk-modal-card">
-    <div class="struk-header">
-      <img src="{{ asset('images/logo.png') }}" alt="logo" class="struk-logo">
-      <div class="struk-brand">Emam Kasir</div>
-      <div class="struk-address">Jl. Kuliner No. 17, Jakarta Selatan</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:400px;">
+    <div id="strutContent" style="background:#fff;border-radius:16px;width:100%;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+      <div class="sm-header">
+        <img src="{{ asset('images/logo.png') }}" alt="logo" class="sm-logo">
+        <div class="sm-title">Emam Kasir</div>
+        <div class="sm-subtitle">Jl. Rasa Sayange No. 123, Jakarta</div>
+      </div>
+      <hr class="sm-line">
+      <div class="sm-info">
+        <div><div class="sm-label">No. Invoice</div><div class="sm-value" id="rInvoice"></div></div>
+        <div style="text-align:right"><div class="sm-label">Tanggal</div><div class="sm-value" id="rTanggal"></div></div>
+        <div><div class="sm-label">Kasir</div><div class="sm-value" id="rKasir"></div></div>
+        <div style="text-align:right"><div class="sm-label">Meja</div><div class="sm-value" id="rMeja"></div></div>
+      </div>
+      <hr class="sm-line">
+      <div id="rItems" class="sm-items"></div>
+      <div class="sm-summary">
+        <div class="sm-sum-row"><span>Subtotal</span><span id="rSubtotal"></span></div>
+        <div class="sm-sum-row"><span>Pajak (10%)</span><span id="rTax"></span></div>
+        <div class="sm-total-row"><span>Total Akhir</span><span id="rTotal"></span></div>
+      </div>
+      <div class="sm-success">
+        <div class="sm-success-badge">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="#16A34A"/><path d="M5 9L7.5 11.5L13 6.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          (SUCCESS)
+        </div>
+      </div>
+      <hr class="sm-line">
+      <div class="sm-footer-text">Terima kasih atas kunjungan Anda!</div>
     </div>
-    <div class="struk-info-row"><span>No Invoice</span><span>#TRX-202401</span></div>
-    <div class="struk-info-row"><span>Tanggal</span><span>24 Oct 2023, 14:20</span></div>
-    <div class="struk-info-row"><span>Kasir</span><span>Andi</span></div>
-    <div class="struk-info-row"><span>Meja</span><span>T-05</span></div>
-    <hr class="struk-divider">
-    <div class="struk-item-row"><span class="item-name">Nasi Goreng Spesial x2</span><span class="item-price">Rp 40.000</span></div>
-    <div class="struk-item-row"><span class="item-name">Ayam Bakar Madu x1</span><span class="item-price">Rp 42.000</span></div>
-    <div class="struk-item-row"><span class="item-name">Es Jeruk Peras x2</span><span class="item-price">Rp 12.000</span></div>
-    <div class="struk-item-row"><span class="item-name">Kentang Goreng x1</span><span class="item-price">Rp 15.000</span></div>
-    <div class="struk-item-row"><span class="item-name">Pisang Keju x1</span><span class="item-price">Rp 16.000</span></div>
-    <div class="struk-item-row"><span class="item-name">Es Teh Manis x3</span><span class="item-price">Rp 18.000</span></div>
-    <hr class="struk-divider">
-    <div class="struk-info-row"><span>Subtotal</span><span>Rp 143.000</span></div>
-    <div class="struk-info-row"><span>PPN 10%</span><span>Rp 14.300</span></div>
-    <div class="struk-info-row"><span>Diskon</span><span>- Rp 0</span></div>
-    <hr class="struk-divider">
-    <div class="struk-total-row"><span>TOTAL</span><span>Rp 157.300</span></div>
-    <div style="display:flex;justify-content:center;margin-top:4px;">
-      <span class="badge badge-qris" style="font-size:12px;padding:5px 14px;">QRIS &bull; SUCCESS</span>
-    </div>
-    <div class="struk-footer">Terima kasih telah berkunjung!<br>Emam Restaurant</div>
-    <div class="modal-btn-row">
-      <button class="btn-modal-cancel" onclick="closeModal('strutModal')">Tutup</button>
-      <button class="btn-modal-submit" onclick="window.print()">Cetak Struk</button>
+    <div class="no-print" style="display:flex;gap:10px;width:100%;">
+      <button onclick="cetakStruk()" style="flex:1;padding:13px;background:#D35400;color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-11c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" fill="white"/></svg>
+        Cetak Struk
+      </button>
+      <button onclick="closeModal('strutModal')" style="flex:1;padding:13px;background:#EEE3DC;color:#4A3B32;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="#4A3B32" stroke-width="2" stroke-linecap="round"/></svg>
+        Tutup
+      </button>
     </div>
   </div>
 </div>

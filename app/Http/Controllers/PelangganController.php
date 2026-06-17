@@ -22,6 +22,7 @@ class PelangganController extends Controller
 
         $menus = Menu::with('kategori')
             ->where('status', 'tersedia')
+            ->whereHas('kategori', fn($q) => $q->where('status', 'aktif'))
             ->get()
             ->map(fn($m) => [
                 'id'           => $m->id,
@@ -59,6 +60,7 @@ class PelangganController extends Controller
         // fallback jika belum ada transaksi
         if ($terlaris->isEmpty()) {
             $terlaris = Menu::where('status', 'tersedia')
+                ->whereHas('kategori', fn($q) => $q->where('status', 'aktif'))
                 ->take(5)
                 ->get()
                 ->map(fn($m) => [

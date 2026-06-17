@@ -158,9 +158,8 @@ class ManagerController extends Controller
 
     public function toggleMeja(Meja $meja)
     {
-        $newStatus = $meja->status === 'nonaktif' ? 'tersedia' : 'nonaktif';
-        $meja->update(['status' => $newStatus]);
-        return response()->json(['success' => true, 'status' => $newStatus]);
+        $meja->update(['aktif' => !$meja->aktif]);
+        return response()->json(['success' => true, 'aktif' => $meja->aktif]);
     }
 
     // ══════════════════════════════════════════
@@ -224,7 +223,7 @@ class ManagerController extends Controller
             'metode'          => 'nullable|in:tunai,cash,qris,transfer',
         ]);
 
-        $query = Transaksi::with(['meja', 'user']);
+        $query = Transaksi::with(['meja', 'user', 'detailTransaksis.menu']);
 
         if (!empty($filters['tanggal_mulai']) && !empty($filters['tanggal_selesai'])) {
             $startDate = Carbon::parse($filters['tanggal_mulai']);
@@ -248,8 +247,7 @@ class ManagerController extends Controller
             $query->where('metode_pembayaran', $filters['metode']);
         }
 
-        $transaksis = $query->latest('tanggal')
-            ->get();
+        $transaksis = $query->latest('id')->get();
 
         return view('manager.transaksi', compact('transaksis', 'filters'));
     }
@@ -264,15 +262,15 @@ class ManagerController extends Controller
             'bulan' => 'nullable|date_format:Y-m',
         ]);
 
-        $selectedMonth = Carbon::createFromFormat('Y-m', $filters['bulan'] ?? now()->format('Y-m'));
-        $startOfMonth = $selectedMonth->copy()->startOfMonth();
-        $endOfMonth = $selectedMonth->copy()->endOfMonth();
+        $selectedMonth    = Carbon::createFromFormat('Y-m', $filters['bulan'] ?? now()->format('Y-m'));
+        $startOfMonth     = $selectedMonth->copy()->startOfMonth();
+        $endOfMonth       = $selectedMonth->copy()->endOfMonth();
         $transaksiBulanan = Transaksi::whereBetween('tanggal', [$startOfMonth, $endOfMonth]);
 
         $totalPendapatan = (clone $transaksiBulanan)->sum('total');
         $totalTransaksi  = (clone $transaksiBulanan)->count();
         $totalMenuAktif  = Menu::where('status', 'tersedia')->count();
-        $totalMeja       = Meja::count();
+        $totalMeja       = Meja::where('aktif', true)->count();
 
         $laporanHarian = Transaksi::selectRaw('DATE(tanggal) as tanggal, COUNT(*) as jumlah_transaksi, SUM(total) as total_pendapatan')
             ->whereBetween('tanggal', [$startOfMonth, $endOfMonth])

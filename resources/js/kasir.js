@@ -1,21 +1,17 @@
-/* ── CONFIG ── */
 const IMG_FALLBACK = window.APP.imgMenu;
 const CSRF         = window.APP.csrf;
 
-/* ── STATE ── */
 let menuData = [];
 let cart     = [];
 let filter   = 'Semua Menu';
 let search   = '';
 
-/* ── LOAD MENUS FROM DB ── */
 async function loadMenus() {
-  const res  = await fetch('/kasir/menus');
-  menuData   = await res.json();
+  const res = await fetch('/kasir/menus');
+  menuData  = await res.json();
   renderMenu();
 }
 
-/* ── RENDER MENU ── */
 function renderMenu() {
   const grid     = document.getElementById('menuGrid');
   const filtered = menuData.filter(m => {
@@ -50,7 +46,6 @@ function renderMenu() {
   `).join('');
 }
 
-/* ── CART ── */
 function addToCart(id) {
   const item  = menuData.find(m => m.id === id);
   if (!item) return;
@@ -129,7 +124,7 @@ function renderOrder() {
   `).join('');
 }
 
-/* ── EVENTS: filter, search, order type ── */
+/* ── Events ── */
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -177,7 +172,6 @@ function toggleMejaSection(isTakeAway) {
     });
 }
 
-/* ── PILIH STATUS MEJA ── */
 const mejaStatusPending = { id: null, action: null, nama: null };
 
 function pilihStatusMeja(action, btn, prefix) {
@@ -207,7 +201,6 @@ function pilihStatusMeja(action, btn, prefix) {
   info.textContent       = `✓ ${mejaStatusPending.nama} akan di-set: ${isR ? 'Reservasi (Dipesan)' : 'Isi (Terisi)'}`;
 }
 
-/* ── POPULATE MEJA SELECTS (hanya yang tersedia dari DB) ── */
 async function populateMejaSelects() {
   const res   = await fetch('/kasir/mejas-tersedia');
   const mejas = await res.json();
@@ -235,14 +228,12 @@ async function populateMejaSelects() {
   });
 }
 
-/* ── TANGGAL DINAMIS ── */
 (function () {
   const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   const d = new Date();
   document.getElementById('currentDate').textContent = d.getDate() + ' ' + bulan[d.getMonth()] + ' ' + d.getFullYear();
 })();
 
-/* ── PAY BUTTON → open modal ── */
 document.getElementById('payBtn').addEventListener('click', async () => {
   if (!cart.length) return;
   const sub   = cart.reduce((s, c) => s + Number(c.item.harga) * c.qty, 0);
@@ -255,7 +246,6 @@ document.getElementById('payBtn').addEventListener('click', async () => {
   setMethod('tunai');
 });
 
-/* ── PAYMENT METHOD TOGGLE ── */
 const vaMap = {
   BCA:     ['Virtual Account BCA',     '8839 0812 3456 7890'],
   Mandiri: ['Virtual Account Mandiri', '8765 0789 2423 9823'],
@@ -296,7 +286,6 @@ document.querySelectorAll('.bank-btn').forEach(b => {
   });
 });
 
-/* ── CONFIRM PAYMENT → POST KE BACKEND ── */
 document.getElementById('payConfirmBtn').addEventListener('click', async () => {
   const activeMethod = ['tunai','qris','transfer'].find(m =>
     document.getElementById('method' + m.charAt(0).toUpperCase() + m.slice(1)).style.display !== 'none'
@@ -326,6 +315,11 @@ document.getElementById('payConfirmBtn').addEventListener('click', async () => {
     items: cart.map(c => ({ id_menu: c.item.id, jumlah: c.qty })),
   };
 
+  if (jenisBtn === 'dine-in' && idMeja && !mejaStatusPending.action) {
+    alert('Pilih status meja terlebih dahulu (Reservasi atau Isi).');
+    return;
+  }
+
   const confirmBtn = document.getElementById('payConfirmBtn');
   confirmBtn.disabled   = true;
   confirmBtn.textContent = 'Memproses...';
@@ -345,20 +339,21 @@ document.getElementById('payConfirmBtn').addEventListener('click', async () => {
     const tgl   = `${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     const metodeLbl = { tunai:'Tunai', qris:'QRIS', transfer:'Transfer' };
 
-    document.getElementById('rTanggal').textContent   = tgl;
-    document.getElementById('rKasir').textContent     = window.APP.username;
-    document.getElementById('rPelanggan').textContent = data.transaksi.nama_pelanggan || '-';
-    document.getElementById('rMeja').textContent      = mejaStatusPending.nama || '-';
-    document.getElementById('rMetode').textContent    = metodeLbl[activeMethod] || '-';
-    document.getElementById('rSubtotal').textContent  = fmtRp(data.subtotal);
-    document.getElementById('rTax').textContent       = fmtRp(data.pajak);
-    document.getElementById('rTotal').textContent     = fmtRp(data.total);
+    document.getElementById('rInvoice').textContent  = '#TRX-' + String(data.transaksi.id).padStart(6, '0');
+    document.getElementById('rTanggal').textContent  = tgl;
+    document.getElementById('rKasir').textContent    = window.APP.username;
+    document.getElementById('rMeja').textContent     = mejaStatusPending.nama || 'Take Away';
+    document.getElementById('rSubtotal').textContent = fmtRp(data.subtotal);
+    document.getElementById('rTax').textContent      = fmtRp(data.pajak);
+    document.getElementById('rTotal').textContent    = fmtRp(data.total);
 
     document.getElementById('rItems').innerHTML = data.items.map(e =>
-      `<div style="display:flex;justify-content:space-between;gap:8px;">
-         <span style="flex:1;">${e.nama}</span>
-         <span style="color:#888;white-space:nowrap;">${e.jumlah}x</span>
-         <span style="white-space:nowrap;">${fmtRp(e.subtotal)}</span>
+      `<div>
+         <div class="sm-item-top">
+           <span class="sm-item-name">${e.nama}</span>
+           <span class="sm-item-price">${fmtRp(e.subtotal)}</span>
+         </div>
+         <div class="sm-item-qty">${e.jumlah} x ${fmtRp(e.harga)}</div>
        </div>`
     ).join('');
 
@@ -384,7 +379,6 @@ function tutupStruk() {
   document.getElementById('strutModal').classList.add('hidden');
 }
 
-/* ── DELETE CONFIRM ── */
 let pendingDeleteId = null;
 
 function confirmDelete(id) {
@@ -397,10 +391,8 @@ document.getElementById('deleteConfirmBtn').addEventListener('click', () => {
   document.getElementById('deleteModal').classList.add('hidden');
 });
 
-/* ── INIT ── */
 loadMenus();
 
-/* expose ke global agar inline onclick di HTML bisa memanggil */
 window.addToCart       = addToCart;
 window.changeQty       = changeQty;
 window.confirmDelete   = confirmDelete;

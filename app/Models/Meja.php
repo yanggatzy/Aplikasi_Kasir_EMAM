@@ -15,6 +15,7 @@ class Meja extends Model
         'kapasitas',
         'lokasi',
         'status',
+        'aktif',
     ];
 
     /**

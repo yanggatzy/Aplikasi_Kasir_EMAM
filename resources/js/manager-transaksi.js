@@ -41,8 +41,46 @@ if (searchInput) {
   });
 }
 
-window.openModal  = openModal;
-window.closeModal = closeModal;
+function lihatStruk(btn) {
+  const d   = JSON.parse(btn.dataset.struk);
+  const sub = d.items.reduce((s, i) => s + i.subtotal, 0);
+  const tax = d.total - sub;
+  const fmt = v => 'Rp ' + Number(v).toLocaleString('id-ID');
+
+  document.getElementById('rInvoice').textContent  = '#TRX-' + String(d.id).padStart(6, '0');
+  document.getElementById('rTanggal').textContent  = d.tgl;
+  document.getElementById('rKasir').textContent    = d.kasir;
+  document.getElementById('rMeja').textContent     = d.meja;
+  document.getElementById('rSubtotal').textContent  = fmt(sub);
+  document.getElementById('rTax').textContent       = fmt(tax);
+  document.getElementById('rTotal').textContent     = fmt(d.total);
+
+  document.getElementById('rItems').innerHTML = d.items.map(i =>
+    `<div>
+      <div class="sm-item-top">
+        <span class="sm-item-name">${i.nama}</span>
+        <span class="sm-item-price">${fmt(i.subtotal)}</span>
+      </div>
+      <div class="sm-item-qty">${i.jumlah} x ${fmt(i.harga)}</div>
+    </div>`
+  ).join('');
+
+  openModal('strutModal');
+}
+
+function cetakStruk() {
+  document.body.classList.add('printing-struk');
+  window.print();
+}
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing-struk');
+});
+
+window.openModal   = openModal;
+window.closeModal  = closeModal;
+window.lihatStruk  = lihatStruk;
+window.cetakStruk  = cetakStruk;
 
 
 const pdfBtn = document.querySelector('.btn-float');

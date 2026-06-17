@@ -47,45 +47,51 @@ function openHapusMeja(id) {
 }
 
 async function submitTambahMeja() {
-  const kode     = document.getElementById('addKodeMeja').value.trim();
-  const nama     = document.getElementById('addNamaMeja').value.trim();
+  const kode      = document.getElementById('addKodeMeja').value.trim();
+  const nama      = document.getElementById('addNamaMeja').value.trim();
   const kapasitas = document.getElementById('addKapasitasMeja').value;
-  const lokasi   = document.getElementById('addLokasiMeja').value;
+  const lokasi    = document.getElementById('addLokasiMeja').value;
   if (!kode || !nama || !kapasitas) { alert('Kode, nama, dan kapasitas wajib diisi'); return; }
 
-  const res = await fetch('/manager/meja', {
-    method: 'POST',
+  const res  = await fetch('/manager/meja', {
+    method:  'POST',
     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
-    body: JSON.stringify({ kode_meja: kode, nama_meja: nama, kapasitas: parseInt(kapasitas), lokasi }),
+    body:    JSON.stringify({ kode_meja: kode, nama_meja: nama, kapasitas: parseInt(kapasitas), lokasi }),
   });
   const data = await res.json();
-  if (data.success) { closeModal('addMejaModal'); window.location.reload(); }
-  else {
+  if (data.success) {
+    closeModal('addMejaModal');
+    window.location.reload();
+  } else {
     const msg = data.errors ? Object.values(data.errors).flat().join('\n') : 'Gagal menambah meja';
     alert(msg);
   }
 }
 
 async function submitEditMeja() {
-  const id       = document.getElementById('editIdMeja').value;
-  const nama     = document.getElementById('editNamaMeja').value.trim();
+  const id        = document.getElementById('editIdMeja').value;
+  const nama      = document.getElementById('editNamaMeja').value.trim();
   const kapasitas = document.getElementById('editKapasitasMeja').value;
-  const lokasi   = document.getElementById('editLokasiMeja').value;
+  const lokasi    = document.getElementById('editLokasiMeja').value;
   if (!nama || !kapasitas) { alert('Nama dan kapasitas wajib diisi'); return; }
 
-  const res = await fetch(`/manager/meja/${id}`, {
-    method: 'PUT',
+  const res  = await fetch(`/manager/meja/${id}`, {
+    method:  'PUT',
     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
-    body: JSON.stringify({ nama_meja: nama, kapasitas: parseInt(kapasitas), lokasi }),
+    body:    JSON.stringify({ nama_meja: nama, kapasitas: parseInt(kapasitas), lokasi }),
   });
   const data = await res.json();
-  if (data.success) { closeModal('editMejaModal'); window.location.reload(); }
-  else alert('Gagal menyimpan perubahan');
+  if (data.success) {
+    closeModal('editMejaModal');
+    window.location.reload();
+  } else {
+    alert('Gagal menyimpan perubahan');
+  }
 }
 
 async function toggleMeja(id, checkbox) {
-  const res = await fetch(`/manager/meja/${id}/toggle`, {
-    method: 'PATCH',
+  const res  = await fetch(`/manager/meja/${id}/toggle`, {
+    method:  'PATCH',
     headers: { 'X-CSRF-TOKEN': CSRF },
   });
   const data = await res.json();
@@ -96,14 +102,18 @@ async function toggleMeja(id, checkbox) {
 }
 
 async function submitHapusMeja() {
-  const id = document.getElementById('hapusIdMeja').value;
-  const res = await fetch(`/manager/meja/${id}`, {
-    method: 'DELETE',
+  const id   = document.getElementById('hapusIdMeja').value;
+  const res  = await fetch(`/manager/meja/${id}`, {
+    method:  'DELETE',
     headers: { 'X-CSRF-TOKEN': CSRF },
   });
   const data = await res.json();
-  if (data.success) { closeModal('hapusMejaModal'); window.location.reload(); }
-  else alert('Gagal menghapus meja');
+  if (data.success) {
+    closeModal('hapusMejaModal');
+    window.location.reload();
+  } else {
+    alert('Gagal menghapus meja');
+  }
 }
 
 window.openModal        = openModal;

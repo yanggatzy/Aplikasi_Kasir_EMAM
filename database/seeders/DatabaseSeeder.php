@@ -91,6 +91,7 @@ class DatabaseSeeder extends Seeder
                 'lokasi'    => $lokasi,
                 'kapasitas' => $kap,
                 'status'    => 'tersedia',
+                'aktif'     => true,
             ]);
         }
 

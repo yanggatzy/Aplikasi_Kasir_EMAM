@@ -256,35 +256,45 @@
 
   {{-- ── STRUK MODAL ── --}}
   <div id="strutModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:300;padding:1rem;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:360px;">
-      <div id="strutContent" style="background:#fff;border-radius:12px;width:100%;padding:0;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.15);font-family:'Courier New',monospace;font-size:13px;">
-        <div style="background:#D35400;padding:20px;text-align:center;color:#fff;">
-          <div style="font-size:22px;font-weight:700;letter-spacing:1px;">EMAM</div>
-          <div style="font-size:12px;opacity:0.85;margin-top:2px;">Restoran</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:400px;">
+      <div id="strutContent" style="background:#fff;border-radius:16px;width:100%;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+        <div class="sm-header">
+          <img src="{{ asset('images/logo.png') }}" alt="logo" class="sm-logo">
+          <div class="sm-title">Emam Kasir</div>
+          <div class="sm-subtitle">Jl. Rasa Sayange No. 123, Jakarta</div>
         </div>
-        <div style="padding:16px;border-bottom:1px dashed #ccc;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="color:#888;">Tanggal</span><span id="rTanggal" style="font-weight:600;"></span></div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="color:#888;">Kasir</span><span id="rKasir" style="font-weight:600;"></span></div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="color:#888;">Pelanggan</span><span id="rPelanggan" style="font-weight:600;"></span></div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="color:#888;">Meja</span><span id="rMeja" style="font-weight:600;"></span></div>
-          <div style="display:flex;justify-content:space-between;"><span style="color:#888;">Metode</span><span id="rMetode" style="font-weight:600;"></span></div>
+        <hr class="sm-line">
+        <div class="sm-info">
+          <div><div class="sm-label">No. Invoice</div><div class="sm-value" id="rInvoice"></div></div>
+          <div style="text-align:right"><div class="sm-label">Tanggal</div><div class="sm-value" id="rTanggal"></div></div>
+          <div><div class="sm-label">Kasir</div><div class="sm-value" id="rKasir"></div></div>
+          <div style="text-align:right"><div class="sm-label">Meja</div><div class="sm-value" id="rMeja"></div></div>
         </div>
-        <div id="rItems" style="padding:16px;border-bottom:1px dashed #ccc;display:flex;flex-direction:column;gap:6px;"></div>
-        <div style="padding:16px;border-bottom:1px dashed #ccc;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;color:#888;"><span>Subtotal</span><span id="rSubtotal"></span></div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;color:#888;"><span>Pajak (10%)</span><span id="rTax"></span></div>
-          <div style="display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:#D35400;margin-top:8px;"><span>TOTAL</span><span id="rTotal"></span></div>
+        <hr class="sm-line">
+        <div id="rItems" class="sm-items"></div>
+        <div class="sm-summary">
+          <div class="sm-sum-row"><span>Subtotal</span><span id="rSubtotal"></span></div>
+          <div class="sm-sum-row"><span>Pajak (10%)</span><span id="rTax"></span></div>
+          <div class="sm-total-row"><span>Total Akhir</span><span id="rTotal"></span></div>
         </div>
-        <div style="padding:16px;text-align:center;color:#888;font-size:12px;">
-          ★ Terima kasih telah berkunjung ★<br>Semoga hari Anda menyenangkan!
+        <div class="sm-success">
+          <div class="sm-success-badge">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="#16A34A"/><path d="M5 9L7.5 11.5L13 6.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            (SUCCESS)
+          </div>
         </div>
+        <hr class="sm-line">
+        <div class="sm-footer-text">Terima kasih atas kunjungan Anda!</div>
       </div>
       <div class="no-print" style="display:flex;gap:10px;width:100%;">
         <button onclick="window.print()" style="flex:1;padding:13px;background:#D35400;color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-11c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" fill="white"/></svg>
           Cetak Struk
         </button>
-        <button onclick="tutupStruk()" style="flex:1;padding:13px;background:#EEE3DC;color:#4A3B32;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">Selesai</button>
+        <button onclick="tutupStruk()" style="flex:1;padding:13px;background:#EEE3DC;color:#4A3B32;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="#4A3B32" stroke-width="2" stroke-linecap="round"/></svg>
+          Tutup
+        </button>
       </div>
     </div>
   </div>
