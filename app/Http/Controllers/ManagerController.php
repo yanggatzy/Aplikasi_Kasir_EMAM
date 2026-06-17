@@ -220,7 +220,7 @@ class ManagerController extends Controller
         $filters = $request->validate([
             'tanggal_mulai'   => 'nullable|date',
             'tanggal_selesai' => 'nullable|date',
-            'metode'          => 'nullable|in:tunai,cash,qris,transfer',
+            'metode'          => 'nullable|in:tunai,qris,transfer',
         ]);
 
         $query = Transaksi::with(['meja', 'user', 'detailTransaksis.menu']);

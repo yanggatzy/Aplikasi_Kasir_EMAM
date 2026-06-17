@@ -22,14 +22,16 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-                if (Auth::user()->role == 'manager') {
-                    return redirect('/manager/dashboard');
-                }
+            if (Auth::user()->role == 'manager') {
+                return redirect('/manager/dashboard');
+            }
 
-                if (Auth::user()->role == 'kasir') {
-                    return redirect('/kasir/dashboard');
-                }
+            if (Auth::user()->role == 'kasir') {
+                return redirect('/kasir/dashboard');
+            }
 
+            Auth::logout();
+            return back()->with('error', 'Role tidak dikenali. Hubungi administrator.');
         }
 
         return back()

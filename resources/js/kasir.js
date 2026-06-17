@@ -331,12 +331,19 @@ document.getElementById('payConfirmBtn').addEventListener('click', async () => {
       body:    JSON.stringify(payload),
     });
     const data = await res.json();
-    if (!data.success) throw new Error('Gagal menyimpan transaksi');
+    if (!res.ok || !data.success) {
+      const msg = data.errors
+        ? Object.values(data.errors).flat().join('\n')
+        : (data.message || 'Gagal menyimpan transaksi');
+      throw new Error(msg);
+    }
 
     /* isi struk dari respons server */
-    const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-    const now   = new Date();
-    const tgl   = `${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const bulanNama = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    const parts = (data.transaksi.tanggal || '').split(/[- :]/);
+    const tgl   = parts.length >= 5
+      ? `${parseInt(parts[2])} ${bulanNama[parseInt(parts[1])-1]} ${parts[0]} ${parts[3]}:${parts[4]}`
+      : new Date().toLocaleString('id-ID');
     const metodeLbl = { tunai:'Tunai', qris:'QRIS', transfer:'Transfer' };
 
     document.getElementById('rInvoice').textContent  = '#TRX-' + String(data.transaksi.id).padStart(6, '0');
@@ -367,7 +374,7 @@ document.getElementById('payConfirmBtn').addEventListener('click', async () => {
     mejaStatusPending.nama   = null;
 
   } catch (err) {
-    alert('Transaksi gagal disimpan. Coba lagi.');
+    alert(err.message || 'Transaksi gagal disimpan. Coba lagi.');
     console.error(err);
   } finally {
     confirmBtn.disabled = false;

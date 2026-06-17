@@ -10,6 +10,8 @@ use App\Http\Controllers\DashboardController;
 
 // ── PUBLIK: menu pelanggan (tanpa login) ──
 Route::get('/menu',          [PelangganController::class, 'index']);
+Route::get('/menu/data',     [PelangganController::class, 'getMenus']);
+Route::get('/menu/terlaris', [PelangganController::class, 'getTerlaris']);
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

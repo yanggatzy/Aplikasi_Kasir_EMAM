@@ -203,7 +203,7 @@
       <svg width="22" height="22" viewBox="0 0 16 20" fill="none"><path d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V3H0V1H5V0H11V1H16V3H15V18C15 18.55 14.8042 19.0208 14.4125 19.4125C14.0208 19.8042 13.55 20 13 20H3ZM13 3H3V18H13V3ZM5 15H7V6H5V15ZM9 15H11V6H9V15Z" fill="#1C1C1C"/></svg>
     </div>
     <p class="modal-title">Hapus Kategori?</p>
-    <p class="modal-subtitle">Data kategori akan dihapus permanen dan tidak bisa dipulihkan.</p>
+    <p class="modal-subtitle">Semua menu di dalam kategori ini akan ikut terhapus permanen dan tidak bisa dipulihkan.</p>
     <div class="modal-btn-stack" style="margin-top:4px;">
       <button class="btn-hapus" onclick="submitHapusKategori()">Hapus</button>
       <button class="btn-batal-pill" onclick="closeModal('hapusKategoriModal')">Batal</button>

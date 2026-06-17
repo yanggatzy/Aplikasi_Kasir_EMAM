@@ -123,7 +123,7 @@
                   <div style="font-weight:700;">{{ number_format($trx->total, 0, ',', '.') }}</div>
                 </td>
                 <td>
-                  @if(in_array($trx->metode_pembayaran, ['tunai', 'cash'], true))
+                  @if($trx->metode_pembayaran === 'tunai')
                     <span class="badge badge-cash">Tunai</span>
                   @elseif($trx->metode_pembayaran === 'qris')
                     <span class="badge badge-qris">QRIS</span>

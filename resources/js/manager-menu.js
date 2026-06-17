@@ -137,7 +137,10 @@ async function submitTambahMenu() {
   });
   const data = await res.json();
   if (data.success) { closeModal('addMenuModal'); window.location.reload(); }
-  else alert('Gagal menambah menu');
+  else {
+    const msg = data.errors ? Object.values(data.errors).flat().join('\n') : 'Gagal menambah menu';
+    alert(msg);
+  }
 }
 
 async function submitEditMenu() {
@@ -161,7 +164,10 @@ async function submitEditMenu() {
   });
   const data = await res.json();
   if (data.success) { closeModal('editMenuModal'); window.location.reload(); }
-  else alert('Gagal menyimpan perubahan');
+  else {
+    const msg = data.errors ? Object.values(data.errors).flat().join('\n') : 'Gagal menyimpan perubahan';
+    alert(msg);
+  }
 }
 
 async function submitHapusMenu() {
