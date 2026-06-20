@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('nama_pelanggan');
-            $table->enum('jenis_pesanan', ['dine-in','takeaway','delivery']);
+            $table->enum('jenis_pesanan', ['dine-in','takeaway']);
             $table->dateTime('tanggal');
 
             $table->double('total')->default(0);
